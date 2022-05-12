@@ -82,4 +82,4 @@ We will try to always make it simple and secure
 
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](https://github.com/fazpass/fazpass-android-sdk/blob/main/LICENSE)
