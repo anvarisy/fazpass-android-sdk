@@ -12,6 +12,8 @@ private lateinit var btnGenerate: AppCompatButton
 private lateinit var btnVerification: AppCompatButton
 private lateinit var myPhone: EditText
 private lateinit var myOtp: EditText
+var otp: String = ""
+var otpId: String = ""
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +30,20 @@ class MainActivity : AppCompatActivity() {
             m.setGateway("98b5d429-b081-4332-ab33-ae1daa746f03")
             m.generateOtp(phone) { response->
                 /*Fazpass.LoginPage(this, response)*/
-                response.data?.otp?.let { otp -> Log.v("Otp", otp) }
-                response.data?.id?.let { id -> Log.v("Id", id) }
+                response.data?.otp?.let { o ->
+                    otp=o
+                    myOtp.setText(otp)
+                }
+                response.data?.id?.let { id -> otpId = id }
+
             }
 
         }
 
         btnVerification.setOnClickListener {
-            m.verifyOtp("9bebe847-111a-4676-b53a-2243353a5633", myOtp.text.toString()){ status->
+            m.verifyOtp(otpId, myOtp.text.toString()){ status->
                 Log.v("Status","$status")
+                Toast.makeText(this,"Status ferivikasi anda $status", Toast.LENGTH_LONG).show()
             }
         }
     }
