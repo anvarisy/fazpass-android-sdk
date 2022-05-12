@@ -2,13 +2,10 @@ package com.fazpass.otp
 
 import android.util.Log
 import com.fazpass.otp.model.GenerateOtpRequest
-import com.fazpass.otp.usecase.MerchantUsecase
-import com.fazpass.otp.utils.Listener
-
+import com.fazpass.otp.model.GenerateOtpResponse
+import com.fazpass.otp.usecase.MerchantUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import okhttp3.RequestBody
-import org.json.JSONObject
 
 /**
  * Created by Anvarisy on 5/11/2022.
@@ -23,28 +20,45 @@ open class Merchant {
         this.gatewayKey = gatewayKey
     }
 
-    fun generateOtp(phone:String){
-        startGenerate(phone, this.gatewayKey)
+    fun generateOtp(phone: String, gatewayKey:String,onComplete:(GenerateOtpResponse)->Unit){
+        startGenerate(phone, gatewayKey,onComplete)
     }
 
-    fun generateOtp(phone:String, gateway: String){
-       startGenerate(phone, gatewayKey)
+    fun generateOtp(phone:String, onComplete:(GenerateOtpResponse)->Unit){
+       startGenerate(phone,this.gatewayKey,onComplete)
     }
 
-    private fun startGenerate(phone: String, gatewayKey: String){
-        val fazpass by lazy { MerchantUsecase.start() }
+    private fun startGenerate(phone: String, gatewayKey: String, onComplete:(GenerateOtpResponse)->Unit){
+        val fazpass by lazy { MerchantUseCase.start() }
+        var response = GenerateOtpResponse(false,"",null, phone,null)
         fazpass.generateOtp("Bearer $merchantKey",GenerateOtpRequest( gatewayKey, phone)).
         subscribeOn(Schedulers.io()).
         observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    Log.i("RESULT", result.toString())
+                    response = result
+                    response.phone = phone
+                    onComplete(response)
                 },
                 { error ->
-                    error.message?.let { Log.e("ERRORS", it) }
+                    response.error = error.message
+                    onComplete(response)
                 }
             )
+
     }
 
+/*    open fun setOnGenerateOtp(l: OnGenerateOtp) {
+        throw RuntimeException("Stub!")
+    }
 
+    interface OnGenerateOtp{
+        fun success(response: GenerateOtpResponse){
+
+        }
+
+        fun error(message: String){
+
+        }
+    }*/
 }

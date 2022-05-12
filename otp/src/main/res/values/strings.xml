@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">fazpassotp</string>
+    <string name="verify_your_phone_number">Verify your phone number</string>
+    <string name="login">Login</string>
+    <string name="not_received_the_code_resend_here">Not received the code ? Resend <u>here</u></string>
+    <string name="verified">Verified</string>
+    <string name="please_insert_your_verification_code">Please insert your verification code</string>
+    <string name="_628581175xxxx">628581175XXXX</string>
+    <string name="we_send_verification_code_to_your_whatsapp">We send verification code to your WhatsApp</string>
+    <string name="verify_your_email_address">Verify your email address</string>
+    <string name="_6285811751000">085811751000</string>
+    <string name="choose_your_verification_login_method">Choose your verification / login method</string>
+    <string name="anvarisy_fazpass_com">anvarisy@fazpass.com</string>
+    <string name="don_t_have_account_register">Don\'t have account ? </string>
+    <string name="register"><u>register</u></string>
+
+</resources>

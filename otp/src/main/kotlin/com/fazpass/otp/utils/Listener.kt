@@ -9,6 +9,6 @@ import com.fazpass.otp.model.GenerateOtpResponse
  * anvarisy@fazpass.com
  */
 interface Listener {
-    fun onSuccess():GenerateOtpResponse
-    fun onError():Error
+    fun onSuccess(response: Any):Any
+    fun onError(message: String):Error
 }
