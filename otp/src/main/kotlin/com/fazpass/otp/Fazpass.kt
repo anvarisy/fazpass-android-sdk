@@ -2,7 +2,6 @@ package com.fazpass.otp
 
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
 import com.fazpass.otp.model.GenerateOtpResponse
 
 
@@ -21,9 +20,8 @@ class Fazpass {
 
         fun LoginPage(context:Context, it:GenerateOtpResponse){
             val intent = Intent(context, FazpassLoginActivity::class.java).apply {
-                putExtra("it",it)
+                putExtra("it",it as java.io.Serializable)
             }
-
             context.startActivity(intent)
         }
     }

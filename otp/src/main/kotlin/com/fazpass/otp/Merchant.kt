@@ -3,6 +3,7 @@ package com.fazpass.otp
 import android.util.Log
 import com.fazpass.otp.model.GenerateOtpRequest
 import com.fazpass.otp.model.GenerateOtpResponse
+import com.fazpass.otp.model.VerifyOtpRequest
 import com.fazpass.otp.usecase.MerchantUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -48,17 +49,18 @@ open class Merchant {
 
     }
 
-/*    open fun setOnGenerateOtp(l: OnGenerateOtp) {
-        throw RuntimeException("Stub!")
+    fun verifyOtp(otpId:String, otp:String, onComplete: (Boolean) -> Unit){
+        val fazpass by lazy { MerchantUseCase.start() }
+        fazpass.verifyOtp("Bearer $merchantKey",VerifyOtpRequest( otpId, otp)).
+        subscribeOn(Schedulers.io()).
+        observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    onComplete(true)
+                },
+                {
+                    onComplete(false)
+                }
+            )
     }
-
-    interface OnGenerateOtp{
-        fun success(response: GenerateOtpResponse){
-
-        }
-
-        fun error(message: String){
-
-        }
-    }*/
 }

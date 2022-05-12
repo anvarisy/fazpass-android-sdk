@@ -21,11 +21,15 @@ class MainActivity : AppCompatActivity() {
             var phone: String = myPhone.text.toString()
             val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
             m.setGateway("9bbd5a07-fc1c-402e-8424-86cb970d0bf")
-            m.generateOtp(phone) {
-//                Toast.makeText(this,it.error,Toast.LENGTH_LONG).show()
-                Fazpass.LoginPage(this, it)
+            m.generateOtp(phone) { response->
+                Fazpass.LoginPage(this, response)
             }
-
+            
+            m.verifyOtp("",""){status->
+                if(status){
+                    TODO()
+                }
+            }
         }
     }
 }
