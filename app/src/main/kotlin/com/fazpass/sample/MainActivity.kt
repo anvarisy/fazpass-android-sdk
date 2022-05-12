@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         btnGenerate.setOnClickListener {
             //Action perform when the user clicks on the button.
             var phone: String = myPhone.text.toString()
-            m.setGateway("9bbd5a07-fc1c-402e-8424-86cb970d0bf7")
+            m.setGateway("98b5d429-b081-4332-ab33-ae1daa746f03")
             m.generateOtp(phone) { response->
                 /*Fazpass.LoginPage(this, response)*/
                 response.data?.otp?.let { otp -> Log.v("Otp", otp) }
@@ -35,10 +35,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnVerification.setOnClickListener {
-            m.verifyOtp("",""){status->
-                if(status){
-                    Log.v("Status","Verification complete !")
-                }
+            m.verifyOtp("9bebe847-111a-4676-b53a-2243353a5633", myOtp.text.toString()){ status->
+                Log.v("Status","$status")
             }
         }
     }
