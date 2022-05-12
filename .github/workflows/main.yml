@@ -28,8 +28,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle.kts') }}-${{ hashFiles('buildSrc/src/main/java/Dependencies.kt') }}-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Run Detekt & Ktlint
-        run: ./detekt
 
   lint:
     runs-on: ubuntu-latest
