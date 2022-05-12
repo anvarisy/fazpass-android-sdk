@@ -1,5 +1,7 @@
 package com.fazpass.otp.utils
 
+import com.fazpass.otp.model.GenerateOtpResponse
+
 
 /**
  * Created by Anvarisy on 5/11/2022.
@@ -7,7 +9,6 @@ package com.fazpass.otp.utils
  * anvarisy@fazpass.com
  */
 interface Listener {
-    fun onSuccess()
-    fun onError()
-    fun onProgress()
+    fun onSuccess():GenerateOtpResponse
+    fun onError():Error
 }

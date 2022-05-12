@@ -2,6 +2,7 @@ package com.fazpass.otp.usecase
 
 
 import com.fazpass.otp.model.GenerateOtpRequest
+import com.fazpass.otp.model.GenerateOtpResponse
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -20,7 +21,7 @@ import retrofit2.http.POST
  * anvarisy@fazpass.com
  */
 interface MerchantUsecase {
-    @POST("generate") fun generateOtp(@Header("Authorization") token:String, @Body requestBody: GenerateOtpRequest): Observable<ResponseBody>
+    @POST("generate") fun generateOtp(@Header("Authorization") token:String, @Body requestBody: GenerateOtpRequest): Observable<GenerateOtpResponse>
 
     companion object{
         fun start():MerchantUsecase{

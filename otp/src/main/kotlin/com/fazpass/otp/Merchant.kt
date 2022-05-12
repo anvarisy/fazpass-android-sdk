@@ -24,37 +24,27 @@ open class Merchant {
     }
 
     fun generateOtp(phone:String){
-        Log.v("phone",phone)
-        Log.v("gateway",gatewayKey)
+        startGenerate(phone, this.gatewayKey)
+    }
+
+    fun generateOtp(phone:String, gateway: String){
+       startGenerate(phone, gatewayKey)
+    }
+
+    private fun startGenerate(phone: String, gatewayKey: String){
         val fazpass by lazy { MerchantUsecase.start() }
         fazpass.generateOtp("Bearer $merchantKey",GenerateOtpRequest( gatewayKey, phone)).
         subscribeOn(Schedulers.io()).
         observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    Log.v("Check", result.toString())
                     Log.i("RESULT", result.toString())
                 },
                 { error ->
                     error.message?.let { Log.e("ERRORS", it) }
                 }
             )
-
     }
 
 
- inner class GenerateOtp: Listener{
-     override fun onSuccess() {
-         TODO("Not yet implemented")
-     }
-
-     override fun onError() {
-         TODO("Not yet implemented")
-     }
-
-     override fun onProgress() {
-         TODO("Not yet implemented")
-     }
-
- }
 }
