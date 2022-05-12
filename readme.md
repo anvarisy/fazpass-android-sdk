@@ -16,7 +16,7 @@ Please add this line into your gradle
  implementation 'https://github.com/fazpass/fazpass-android-sdk'
 ```
 
-##Usage
+## Usage
 ```kotlin
 import com.fazpass.otp.Fazpass
 
@@ -30,7 +30,7 @@ import com.fazpass.otp.Fazpass
  }
 ```
 
-###Response Attribute
+### Response Attribute
 When generating otp was success, the response is an object with this structure
 ```kotlin
 data class GenerateOtpResponse(
@@ -52,14 +52,14 @@ data class GenerateOtpData(
 ```
 We already serve it.
 
-##Validation
+## Validation
 ```kotlin
  m.verifyOtp(OTP_ID, OTP){ status->
     Log.v("Status: ","$status")
     }
 ```
 
-##Template
+## Template
 If you feel lazy to create your validation page, we also have our validation page.
 Only need one line and let us handle the verification
 ```kotlin
@@ -71,11 +71,14 @@ Only need one line and let us handle the verification
  }
 ```
 It looks like this
-<img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/fazpass_verification.jpeg" />
+
+<img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/fazpass_verification.jpeg" width="50%"/>
 
 
-##Conclusion
-We will try to always make it simple and secure :hearth:
+## Conclusion
+We will try to always make it simple and secure
+<img src="https://github.githubassets.com/images/icons/emoji/unicode/2665.png?v8" width="20" height="20"/>
+
 
 
 ## License
