@@ -3,6 +3,7 @@ package com.fazpass.otp
 import android.app.Activity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.fazpass.otp.model.GenerateOtpResponse
 
@@ -32,9 +33,23 @@ class Fazpass {
             if (view == null) {
                 view = View(activity)
             }
+
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             val dialogFragment = FazpassLoginPage(onComplete, it)
             dialogFragment.show(activity.supportFragmentManager, "signature")
+            /*if(it.data==null){
+                val builder = AlertDialog.Builder(activity)
+                builder.setTitle("Alert !")
+                builder.setMessage("Generate Otp Failed")
+                builder.setPositiveButton("Close") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                builder.show()
+            }else{
+                val dialogFragment = FazpassLoginPage(onComplete, it)
+                dialogFragment.show(activity.supportFragmentManager, "signature")
+            }*/
+
         }
 
     }

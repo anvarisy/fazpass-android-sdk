@@ -1,13 +1,13 @@
 package com.fazpass.otp
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +26,14 @@ import com.fazpass.otp.model.GenerateOtpResponse
  */
 
 internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: GenerateOtpResponse) : DialogFragment() {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : Dialog(activity!!, theme) {
+            override fun onBackPressed() {
+              dismiss()
+            }
+        }
+    }
+
     val complete = onComplete
     private var response = otpResponse
     private lateinit var digitContainer: LinearLayout

@@ -8,52 +8,88 @@ import androidx.appcompat.widget.AppCompatButton
 import com.fazpass.otp.Fazpass
 
 
-private lateinit var btnGenerate: AppCompatButton
-private lateinit var btnVerification: AppCompatButton
+
+private lateinit var myCountry: EditText
 private lateinit var myPhone: EditText
-private lateinit var myOtp: EditText
-var otp: String = ""
-var otpId: String = ""
+private lateinit var myEmail: EditText
+private lateinit var btnSms: AppCompatButton
+private lateinit var btnMissCall: AppCompatButton
+private lateinit var btnWhatsapp: AppCompatButton
+private lateinit var btnLongWhatsapp: AppCompatButton
+private lateinit var btnEmail: AppCompatButton
+
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        btnGenerate = findViewById(R.id.btnGenerate)
+
+        myCountry = findViewById(R.id.edtCountryCode)
+        myCountry.setText("+62")
         myPhone = findViewById(R.id.edtPhone)
-        myOtp = findViewById(R.id.edtOtp)
-        btnVerification = findViewById(R.id.btnVerification)
-        val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
-
-        btnGenerate.setOnClickListener {
-            //Action perform when the user clicks on the button.
-            var phone: String = myPhone.text.toString()
-            m.setGateway("98b5d429-b081-4332-ab33-ae1daa746f03")
-            m.generateOtp(phone) { response->
-                Fazpass.LoginPage(this, response){status->
-                    Log.v("STATUS","$status")
-                }
-
+        myPhone.requestFocus()
+        myEmail = findViewById(R.id.edtEmail)
+        btnSms = findViewById(R.id.btnSms)
+        btnSms.setOnClickListener {
+            if(myPhone.text.toString() == ""){
+                Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
+            }else{
+                Generate(Gateway.SMS)
             }
 
         }
+
+        btnMissCall = findViewById(R.id.btnMissCall)
+        btnMissCall.setOnClickListener {
+            if(myPhone.text.toString() == ""){
+                Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
+            }else {
+                Generate(Gateway.MISCALL)
+            }
+        }
+
+        btnWhatsapp = findViewById(R.id.btnWhatsapp)
+        btnWhatsapp.setOnClickListener {
+            if(myPhone.text.toString() == ""){
+                Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
+            }else {
+                Generate(Gateway.WHATSAPP)
+            }
+        }
+        btnLongWhatsapp = findViewById(R.id.btnWaLong)
+        btnLongWhatsapp.setOnClickListener {
+            if(myPhone.text.toString() == ""){
+                Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
+            }else {
+                Generate(Gateway.WA_LONG)
+            }
+        }
+
+        btnEmail = findViewById(R.id.btnEmail)
+        btnEmail.setOnClickListener {
+            if(myPhone.text.toString() == ""){
+                Toast.makeText(this,"Email should be filled",Toast.LENGTH_LONG).show()
+            }else {
+                Generate(Gateway.EMAIL)
+            }
+        }
+
     }
+
+    fun Generate(gateway:String) {
+        val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        var phone = myCountry.text.toString()+ myPhone.text.toString()
+        if(phone.length<12){
+            Toast.makeText(this,"Phone not valid",Toast.LENGTH_LONG).show()
+        }else{
+            m.setGateway(gateway)
+            m.generateOtp(phone) { response ->
+                Fazpass.LoginPage(this, response) { status ->
+
+                }
+            }
+        }
+
+    }
+
 }
 
-/*
-        val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
-
- */
-
-/*      m.setGateway("9bbd5a07-fc1c-402e-8424-86cb970d0bf")
-        m.generateOtp(phone) { response->
-                *//*Fazpass.LoginPage(this, response)*//*
-                response.data?.otp?.let { otp -> Log.v("Otp", otp) }
-            }*/
-
-/*
-        m.verifyOtp("",""){status->
-             if(status){
-                Log.v("Status","Verification complete !")
-              }
-            }
-*/

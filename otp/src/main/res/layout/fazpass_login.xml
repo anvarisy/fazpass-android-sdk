@@ -33,7 +33,7 @@
                 android:text="@string/please_insert_your_verification_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:gravity="center_horizontal" android:textSize="12sp"
-                android:textStyle="bold" android:layout_marginBottom="8dp"/>
+                android:textStyle="bold" android:layout_marginBottom="8dp" android:id="@+id/tvPleaseInsert"/>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
