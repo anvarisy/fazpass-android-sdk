@@ -1,7 +1,9 @@
 package com.fazpass.otp
 
-import android.content.Context
-import android.content.Intent
+import android.app.Activity
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import com.fazpass.otp.model.GenerateOtpResponse
 
 
@@ -11,19 +13,31 @@ import com.fazpass.otp.model.GenerateOtpResponse
  * anvarisy@fazpass.com
  */
 class Fazpass {
+
     companion object{
         fun initialize(key:String):Merchant{
             val m = Merchant()
             m.merchantKey = key
+            Merchant.merchantKey = key
             return m
         }
 
-        fun LoginPage(context:Context, it:GenerateOtpResponse){
-            val intent = Intent(context, FazpassLoginActivity::class.java).apply {
+        fun LoginPage(activity: AppCompatActivity, it:GenerateOtpResponse, onComplete:(Boolean)->Unit){
+          /*  val intent = Intent(context, FazpassLoginActivity::class.java).apply {
                 putExtra("it",it as java.io.Serializable)
             }
-            context.startActivity(intent)
+            context.startActivity(intent)*/
+            val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            var view = activity.currentFocus
+            if (view == null) {
+                view = View(activity)
+            }
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            val dialogFragment = FazpassLoginPage(onComplete, it)
+            dialogFragment.show(activity.supportFragmentManager, "signature")
         }
+
     }
+
 
 }

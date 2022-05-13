@@ -42,11 +42,12 @@
                 android:divider="@drawable/horizontal_margin"
                 android:layout_marginBottom="16dp" android:id="@+id/llValidationOtpDigit">
         </LinearLayout>
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
                 android:text="@string/verified"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/button"
-                android:background="@drawable/rectangle_grey_border" android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/rectangle_grey_border"
                 android:textSize="18sp" android:paddingStart="3dp" android:paddingEnd="3dp" android:paddingTop="2dp"
                 android:paddingBottom="2dp" android:layout_marginBottom="8dp"/>
         <TextView

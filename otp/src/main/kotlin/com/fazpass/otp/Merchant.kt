@@ -17,6 +17,9 @@ open class Merchant {
     internal lateinit var merchantKey:String
     private lateinit var gatewayKey:String
 
+    companion object{
+        internal  lateinit var merchantKey: String
+    }
     fun setGateway(gatewayKey:String){
         this.gatewayKey = gatewayKey
     }

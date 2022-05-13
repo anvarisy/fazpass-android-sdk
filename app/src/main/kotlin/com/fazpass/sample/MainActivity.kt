@@ -29,22 +29,12 @@ class MainActivity : AppCompatActivity() {
             var phone: String = myPhone.text.toString()
             m.setGateway("98b5d429-b081-4332-ab33-ae1daa746f03")
             m.generateOtp(phone) { response->
-                /*Fazpass.LoginPage(this, response)*/
-                response.data?.otp?.let { o ->
-                    otp=o
-                    myOtp.setText(otp)
+                Fazpass.LoginPage(this, response){status->
+                    Log.v("STATUS","$status")
                 }
-                response.data?.id?.let { id -> otpId = id }
 
             }
 
-        }
-
-        btnVerification.setOnClickListener {
-            m.verifyOtp(otpId, myOtp.text.toString()){ status->
-                Log.v("Status","$status")
-                Toast.makeText(this,"Status ferivikasi anda $status", Toast.LENGTH_LONG).show()
-            }
         }
     }
 }

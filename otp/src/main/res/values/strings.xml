@@ -3,7 +3,7 @@
     <string name="verify_your_phone_number">Verify your phone number</string>
     <string name="login">Login</string>
     <string name="not_received_the_code_resend_here">Not received the code ? Resend <u>here</u></string>
-    <string name="verified">Verified</string>
+    <string name="verified">Verify</string>
     <string name="please_insert_your_verification_code">Please insert your verification code</string>
     <string name="_628581175xxxx">628581175XXXX</string>
     <string name="we_send_verification_code_to_your_whatsapp">We send verification code to your WhatsApp</string>
