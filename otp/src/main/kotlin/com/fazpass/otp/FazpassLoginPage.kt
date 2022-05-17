@@ -3,8 +3,8 @@ package com.fazpass.otp
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
@@ -20,10 +20,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
+import com.chaos.view.PinView
 import com.fazpass.otp.model.GenerateOtpResponse
 import com.fazpass.otp.utils.Helper.Companion.makeLinks
 import com.fazpass.otp.views.Loading
 import com.google.android.material.button.MaterialButton
+
 
 
 /**
@@ -51,6 +53,7 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
     private lateinit var tvTarget: TextView
     private lateinit var tvDetail: TextView
     private lateinit var tvResend: TextView
+    private lateinit var otp: PinView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -109,55 +112,12 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }
 
-        val border = GradientDrawable()
-        border.setColor(-0x1) //white background
-        border.cornerRadius = 10f
-        border.setStroke(2, -0x75757575)
+        val pinView:PinView = view.findViewById(R.id.otpPin)
+        pinView.itemCount= otpLength
 
-        val idCollection = ArrayList<Int>()
-        for (index in 0 until otpLength) {
-            digit = EditText(context)
-            idCollection.add(index)
-            if (otpLength > 6) {
-                digit.width = 60
-            }
-            digit.width = 85
-            digit.gravity = Gravity.CENTER
-            digit.id = index
-            digit.setTextColor(R.color.black)
-            digit.inputType = InputType.TYPE_CLASS_NUMBER
-            digit.filters = arrayOf<InputFilter>(LengthFilter(1))
-            digit.background = border
-           /* digit.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    val digitFocus = view.findViewById<EditText>(idCollection[0])
-                    digitFocus.requestFocus()
-                }
-
-                override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                    try {
-                        val digitFocus = view.findViewById<EditText>(idCollection[index + 1])
-                        digitFocus.requestFocus()
-                    } catch (e: Exception) {
-                        digit.setFocusableInTouchMode(false);
-                        digit.setFocusable(false);
-                        digit.setFocusableInTouchMode(true);
-                        digit.setFocusable(true);
-                    }
-                }
-
-                override fun afterTextChanged(editable: Editable) {
-                }
-            })*/
-            digitContainer.addView(digit)
-        }
         btnVerify = view.findViewById(R.id.button)
         btnVerify.setOnClickListener {
-            var otp = ""
-            for (index in 0 until otpLength) {
-                val digit = view.findViewById<EditText>(idCollection[index])
-                otp+=digit.text.toString()
-            }
+            var otp = pinView.text.toString()
             if(otp.length==otpLength){
                 verify(otp, view.context)
             }else{
@@ -174,7 +134,8 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
             }else{
                 Loading.displayLoadingWithText(view.context,false)
                 val m = Merchant()
-                response.phone?.let { phone -> m.generateOtp(phone) {
+                response.phone?.let { phone -> m.generateOtp(phone) {it->
+                    response = it
                     Loading.hideLoading()
                 } }
             }
@@ -218,3 +179,4 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
 
 
 }
+

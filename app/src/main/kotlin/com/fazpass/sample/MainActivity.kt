@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun generate(gateway:String) {
-        val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        var m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
         var phone = myCountry.text.toString()+ myPhone.text.toString()
         if(phone.length<12){
             Toast.makeText(this,"Phone not valid",Toast.LENGTH_LONG).show()
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun generate(gateway:String, email:String) {
-        val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        var m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
         m.setGateway(gateway)
         m.generateOtp(email) { response ->
             if (!response.status){
