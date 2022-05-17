@@ -10,3 +10,8 @@ data class GenerateOtpRequest(
     val gateway_key:String,
     val phone: String
 )
+
+data class GenerateOtpRequestByEmail(
+    val gateway_key:String,
+    val email: String
+)

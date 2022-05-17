@@ -2,6 +2,7 @@ package com.fazpass.otp.usecase
 
 
 import com.fazpass.otp.model.GenerateOtpRequest
+import com.fazpass.otp.model.GenerateOtpRequestByEmail
 import com.fazpass.otp.model.GenerateOtpResponse
 import com.fazpass.otp.model.VerifyOtpRequest
 import io.reactivex.Completable
@@ -24,6 +25,7 @@ import retrofit2.http.POST
  */
 interface MerchantUseCase {
     @POST("generate") fun generateOtp(@Header("Authorization") token:String, @Body requestBody: GenerateOtpRequest): Observable<GenerateOtpResponse>
+    @POST("generate") fun generateOtpByEmail(@Header("Authorization") token:String, @Body requestBody: GenerateOtpRequestByEmail): Observable<GenerateOtpResponse>
     @POST("verify") fun verifyOtp(@Header("Authorization") token:String, @Body requestBody: VerifyOtpRequest): Completable
 
     companion object{

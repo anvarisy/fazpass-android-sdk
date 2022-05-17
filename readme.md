@@ -47,7 +47,9 @@ data class GenerateOtpData(
     var otp_length: String?,
     var channel: String?,
     var provider: String?,
-    var purpose: String?
+    var purpose: String?,
+    // This attribute only available for missed call
+    var prefix: String?,
 )
 ```
 We already serve it.
@@ -61,15 +63,19 @@ We already serve it.
 
 ## Template
 If you feel lazy to create your validation page, we also have our validation page.
-Only need one line and let us handle the verification
+Only need one line and let us handle the verification.
 ```kotlin
  val m = Fazpass.initialize(MERCHANT_KEY)
 
  m.setGateway(GATEWAY_KEY)
  m.generateOtp(PHONE_NUMBER) { response->
-     Fazpass.LoginPage(this, response)           
+     Fazpass.loginPage(this, response) { status ->
+
+     }          
  }
 ```
+Note: this function need minimum build API MARSHMALLOW
+
 It looks like this
 
 <img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/fazpass_verification.jpeg" width="50%"/>

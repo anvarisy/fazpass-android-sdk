@@ -7,6 +7,9 @@
     <string name="please_insert_your_verification_code">Please insert your verification code</string>
     <string name="_628581175xxxx">628581175XXXX</string>
     <string name="we_send_verification_code_to_your_whatsapp">We send verification code to your WhatsApp</string>
+    <string name="we_send_verification_code_to_your_sms">We send verification code to your SMS</string>
+    <string name="we_send_verification_code_to_your_email">We send verification code to your EMAIL</string>
+    <string name="we_send_verification_code_as_a_missed_call">We send verification code as a MISSED CALL</string>
     <string name="verify_your_email_address">Verify your email address</string>
     <string name="_6285811751000">085811751000</string>
     <string name="choose_your_verification_login_method">Choose your verification / login method</string>

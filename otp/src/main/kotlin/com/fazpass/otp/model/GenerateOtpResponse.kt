@@ -16,6 +16,7 @@ data class GenerateOtpResponse(
 data class GenerateOtpData(
     var id: String?,
     var otp: String?,
+    var prefix: String?,
     var otp_length: String?,
     var channel: String?,
     var provider: String?,

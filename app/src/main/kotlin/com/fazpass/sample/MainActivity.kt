@@ -1,13 +1,12 @@
 package com.fazpass.sample
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import com.fazpass.otp.Fazpass
-
-
 
 private lateinit var myCountry: EditText
 private lateinit var myPhone: EditText
@@ -19,6 +18,7 @@ private lateinit var btnLongWhatsapp: AppCompatButton
 private lateinit var btnEmail: AppCompatButton
 
 class MainActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,7 +33,12 @@ class MainActivity : AppCompatActivity() {
             if(myPhone.text.toString() == ""){
                 Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
             }else{
-                Generate(Gateway.SMS)
+                if(Fazpass.isOnline(this)){
+                    generate(Gateway.SMS)
+                }else{
+                    Toast.makeText(this,"Verification failed cause you are in offline mode", Toast.LENGTH_LONG).show()
+                }
+
             }
 
         }
@@ -43,7 +48,12 @@ class MainActivity : AppCompatActivity() {
             if(myPhone.text.toString() == ""){
                 Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
             }else {
-                Generate(Gateway.MISCALL)
+                if(Fazpass.isOnline(this)){
+                    generate(Gateway.MISCALL)
+                }else{
+                    Toast.makeText(this,"Verification failed cause you are in offline mode", Toast.LENGTH_LONG).show()
+                }
+
             }
         }
 
@@ -52,7 +62,11 @@ class MainActivity : AppCompatActivity() {
             if(myPhone.text.toString() == ""){
                 Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
             }else {
-                Generate(Gateway.WHATSAPP)
+                if(Fazpass.isOnline(this)) {
+                    generate(Gateway.WHATSAPP)
+                }else{
+                    Toast.makeText(this,"Verification failed cause you are in offline mode", Toast.LENGTH_LONG).show()
+                }
             }
         }
         btnLongWhatsapp = findViewById(R.id.btnWaLong)
@@ -60,22 +74,29 @@ class MainActivity : AppCompatActivity() {
             if(myPhone.text.toString() == ""){
                 Toast.makeText(this,"Phone should be filled",Toast.LENGTH_LONG).show()
             }else {
-                Generate(Gateway.WA_LONG)
+                generate(Gateway.WA_LONG)
             }
         }
 
         btnEmail = findViewById(R.id.btnEmail)
         btnEmail.setOnClickListener {
-            if(myPhone.text.toString() == ""){
+            if(myEmail.text.toString() == ""){
                 Toast.makeText(this,"Email should be filled",Toast.LENGTH_LONG).show()
             }else {
-                Generate(Gateway.EMAIL)
+                if(android.util.Patterns.EMAIL_ADDRESS.matcher(myEmail.text.toString()).matches()){
+                    var email = myEmail.text.toString()
+                    generate(Gateway.EMAIL, email)
+                }else{
+                    Toast.makeText(this,"your text not an email !",Toast.LENGTH_LONG).show()
+                }
+
+
             }
         }
 
     }
 
-    fun Generate(gateway:String) {
+    private fun generate(gateway:String) {
         val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
         var phone = myCountry.text.toString()+ myPhone.text.toString()
         if(phone.length<12){
@@ -83,13 +104,38 @@ class MainActivity : AppCompatActivity() {
         }else{
             m.setGateway(gateway)
             m.generateOtp(phone) { response ->
-                Fazpass.LoginPage(this, response) { status ->
-
+                 if (!response.status){
+                     Toast.makeText(this, "Error happen cause ${response.error}", Toast.LENGTH_LONG).show()
+                 }else{
+                     Fazpass.loginPage(this, response) { status ->
+                         //@TODO
+                         // Do anything when verification complete
+                         Toast.makeText(this,"Verification status: $status",Toast.LENGTH_LONG).show()
+                     }
+                 }
                 }
             }
         }
 
+    private fun generate(gateway:String, email:String) {
+        val m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        m.setGateway(gateway)
+        m.generateOtp(email) { response ->
+            if (!response.status){
+                Toast.makeText(this, "Error happen cause ${response.error}", Toast.LENGTH_LONG).show()
+            }else{
+                Fazpass.loginPage(this, response) { status ->
+                    //@TODO
+                    // Do anything when verification complete
+                    Toast.makeText(this,"Verification status: $status",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
-
 }
+
+
+
+
+
 
