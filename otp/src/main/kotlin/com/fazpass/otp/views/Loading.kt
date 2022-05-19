@@ -7,12 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.view.Window
 import com.fazpass.otp.R
 
-
-/**
- * Created by Anvarisy on 5/17/2022.
- * fazpass
- * anvarisy@fazpass.com
- */
 object Loading {
     var dialog: Dialog? = null //obj
     fun displayLoadingWithText(context: Context?, cancelable: Boolean) { // function -- context(parent (reference))

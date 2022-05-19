@@ -2,26 +2,14 @@ package com.fazpass.sample
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.widget.AppCompatButton
-import com.fazpass.otp.Fazpass
-
-private lateinit var myCountry: EditText
-private lateinit var myPhone: EditText
-private lateinit var myEmail: EditText
-private lateinit var btnSms: AppCompatButton
-private lateinit var btnMissCall: AppCompatButton
-private lateinit var btnWhatsapp: AppCompatButton
-private lateinit var btnLongWhatsapp: AppCompatButton
-private lateinit var btnEmail: AppCompatButton
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+/*
 
         myCountry = findViewById(R.id.edtCountryCode)
         myCountry.setText("+62")
@@ -131,6 +119,8 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+*/
     }
 }
 

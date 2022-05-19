@@ -1,14 +1,10 @@
 package com.fazpass.otp.usecase
 
-
-import com.fazpass.otp.model.GenerateOtpRequest
-import com.fazpass.otp.model.GenerateOtpRequestByEmail
-import com.fazpass.otp.model.GenerateOtpResponse
-import com.fazpass.otp.model.VerifyOtpRequest
+import com.fazpass.otp.model.*
+import com.fazpass.otp.utils.Cons
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -17,28 +13,26 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-
-/**
- * Created by Anvarisy on 5/10/2022.
- * fazpass
- * anvarisy@fazpass.com
- */
 interface MerchantUseCase {
-    @POST("generate") fun generateOtp(@Header("Authorization") token:String, @Body requestBody: GenerateOtpRequest): Observable<GenerateOtpResponse>
-    @POST("generate") fun generateOtpByEmail(@Header("Authorization") token:String, @Body requestBody: GenerateOtpRequestByEmail): Observable<GenerateOtpResponse>
+    @POST("generate") fun generateOtpByPhone(@Header("Authorization") token:String, @Body requestBody: RequestOtpByPhone): Observable<Response>
+    @POST("generate") fun generateOtpByEmail(@Header("Authorization") token:String, @Body requestBody: RequestOtpByEmail): Observable<Response>
     @POST("verify") fun verifyOtp(@Header("Authorization") token:String, @Body requestBody: VerifyOtpRequest): Completable
+    @POST("request") fun requestOtpByPhone(@Header("Authorization") token:String, @Body requestBody: RequestOtpByPhone): Observable<Response>
+    @POST("request") fun requestOtpByEmail(@Header("Authorization") token:String, @Body requestBody: RequestOtpByEmail):Observable<Response>
+    @POST("send") fun sendOtpByPhone(@Header("Authorization") token:String, @Body requestBody: SendOtpRequestByPhone): Observable<Response>
+    @POST("send") fun sendOtpByEmail(@Header("Authorization") token:String, @Body requestBody: SendOtpRequestByEmail):Observable<Response>
 
     companion object{
         fun start():MerchantUseCase{
             val clientBuilder = OkHttpClient.Builder()
             val loggingInterceptor = HttpLoggingInterceptor()
-            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY;
-            clientBuilder.addInterceptor(loggingInterceptor);
+            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+            clientBuilder.addInterceptor(loggingInterceptor)
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("http://34.101.82.250:3002/v1/otp/")
-                .client(clientBuilder.build())
+                .baseUrl(Cons.BASE_URL)
+//                .client(clientBuilder.build())
                 .build()
 
             return retrofit.create(MerchantUseCase::class.java)

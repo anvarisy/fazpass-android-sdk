@@ -4,15 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
-import android.text.*
-import android.text.InputFilter.LengthFilter
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,22 +14,14 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
-import com.fazpass.otp.model.GenerateOtpResponse
+import com.fazpass.otp.model.Response
 import com.fazpass.otp.utils.Helper.Companion.makeLinks
 import com.fazpass.otp.views.Loading
 import com.google.android.material.button.MaterialButton
 
-
-
-/**
- * Created by Anvarisy on 5/12/2022.
- * fazpass
- * anvarisy@fazpass.com
- */
-
-internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: GenerateOtpResponse) : DialogFragment() {
+internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return object : Dialog(activity!!, theme) {
+        return object : Dialog(requireActivity(), theme) {
             override fun onBackPressed() {
               dismiss()
             }
@@ -88,27 +73,27 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
         if(response.data?.channel.toString().uppercase()=="SMS"){
             imgLogo.setImageResource(R.drawable.sms)
             tvTitle.setText(R.string.we_send_verification_code_to_your_sms)
-            tvTarget.setText(response.phone?.dropLast(4).plus("XXXX"))
+            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }else if (response.data?.channel.toString().uppercase()=="MISSCALL"){
             imgLogo.setImageResource(R.drawable.call)
             tvTitle.setText(R.string.we_send_verification_code_as_a_missed_call)
-            tvTarget.setText(response.data?.prefix?.plus(x))
-            tvDetail.setText("Please insert $otpLength digit of last number that missed call you")
+            tvTarget.text = response.data?.prefix?.plus(x)
+            tvDetail.text = "Please insert $otpLength digit of last number that missed call you"
         }else if (response.data?.channel.toString().uppercase()=="WHATSAPP"){
             imgLogo.setImageResource(R.drawable.whatsapp)
             tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
-            tvTarget.setText(response.phone?.dropLast(4).plus("XXXX"))
+            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }else if (response.data?.channel.toString().uppercase()=="WA_LONG_NUMBER"){
             imgLogo.setImageResource(R.drawable.whatsapp)
             tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
-            tvTarget.setText(response.phone?.dropLast(4).plus("XXXX"))
+            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }else if (response.data?.channel.toString().uppercase()=="EMAIL"){
             imgLogo.setImageResource(R.drawable.email)
             tvTitle.setText(R.string.we_send_verification_code_to_your_email)
-            tvTarget.setText(response.phone?.replaceRange(3,8,"xxxxx"))
+            tvTarget.text = response.target?.replaceRange(3,8,"xxxxx")
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }
 
@@ -117,7 +102,7 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
 
         btnVerify = view.findViewById(R.id.button)
         btnVerify.setOnClickListener {
-            var otp = pinView.text.toString()
+            val otp = pinView.text.toString()
             if(otp.length==otpLength){
                 verify(otp, view.context)
             }else{
@@ -134,10 +119,31 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
             }else{
                 Loading.displayLoadingWithText(view.context,false)
                 val m = Merchant()
-                response.phone?.let { phone -> m.generateOtp(phone) {it->
-                    response = it
-                    Loading.hideLoading()
-                } }
+                when (response.target) {
+                    "generate" -> {
+                        response.target?.let { target -> m.generateOtp(target) { it->
+                            response = it
+                            Loading.hideLoading()
+                        } }
+                    }
+                    "send" -> {
+                        response.target?.let { target ->
+                            response.data?.otp?.let { otp ->
+                                m.sendOtp(target, otp) { it->
+                                    response = it
+                                    Loading.hideLoading()
+                                }
+                            }
+                        }
+                    }
+                    "request" -> {
+                        response.target?.let { target -> m.requestOtp(target) { it->
+                            response = it
+                            Loading.hideLoading()
+                        } }
+                    }
+                }
+
             }
 
         }))
@@ -168,12 +174,11 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Generat
 
     private fun removeKeyboard(){
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view = activity!!.currentFocus
+        var view = requireActivity().currentFocus
         if (view == null) {
             view = View(activity)
         }
-
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
     }
 
 

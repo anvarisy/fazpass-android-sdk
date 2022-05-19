@@ -1,66 +1,49 @@
 package com.fazpass.otp
 
-import android.util.Log
-import com.fazpass.otp.model.GenerateOtpRequest
-import com.fazpass.otp.model.GenerateOtpRequestByEmail
-import com.fazpass.otp.model.GenerateOtpResponse
-import com.fazpass.otp.model.VerifyOtpRequest
+import com.fazpass.otp.model.*
 import com.fazpass.otp.usecase.MerchantUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-/**
- * Created by Anvarisy on 5/11/2022.
- * fazpass
- * anvarisy@fazpass.com
- */
 open class Merchant {
-    internal lateinit var merchantKey:String
-    private lateinit var gatewayKey:String
 
     companion object{
-        internal  lateinit var merchantKey: String
-        internal lateinit var gatewayKey: String
-    }
-    fun setGateway(gatewayKey:String){
-        this.gatewayKey = gatewayKey
-        Merchant.gatewayKey = gatewayKey
+        internal var merchantKey: String = ""
+        internal var gatewayKey: String = ""
     }
 
-/*    fun generateOtp(phone: String, gatewayKey:String,onComplete:(GenerateOtpResponse)->Unit){
-        startGenerate(phone, gatewayKey,onComplete)
-    }*/
-
-    fun generateOtp(phone:String, onComplete:(GenerateOtpResponse)->Unit){
-       startGenerate(phone, Merchant.gatewayKey,onComplete)
+    fun setGateway(gateway: String){
+        Merchant.gatewayKey = gateway
     }
 
-    private fun startGenerate(phone: String, gatewayKey: String, onComplete:(GenerateOtpResponse)->Unit){
-        val fazpass by lazy { MerchantUseCase.start() }
-        var response = GenerateOtpResponse(false,"",null, phone,null)
-        if(android.util.Patterns.EMAIL_ADDRESS.matcher(phone).matches()){
-            fazpass.generateOtpByEmail("Bearer ${Merchant.merchantKey}", GenerateOtpRequestByEmail( gatewayKey, phone)).
+    fun generateOtp(target:String, onComplete:(Response)->Unit){
+         val fazpass by lazy { MerchantUseCase.start() }
+        var response = Response(false,"","generate", "",target,null)
+         if(android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
+             fazpass.generateOtpByEmail(
+                 "Bearer $merchantKey",
+                 RequestOtpByEmail(gatewayKey, target)
+             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(
+                     { result ->
+                         response = result
+                         response.target = target
+                         onComplete(response)
+                     },
+                     { error ->
+                         response.error = error.message
+                         onComplete(response)
+                     }
+                 )
+//        }else if(android.util.Patterns.PHONE.matcher(target).matches()){
+            }else{
+            fazpass.generateOtpByPhone("Bearer $merchantKey",RequestOtpByPhone(gatewayKey, target)).
             subscribeOn(Schedulers.io()).
             observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
                         response = result
-                        response.phone = phone
-                        onComplete(response)
-                    },
-                    { error ->
-                        response.error = error.message
-                        onComplete(response)
-                    }
-                )
-        }else{
-            fazpass.generateOtp("Bearer ${Merchant.merchantKey}",GenerateOtpRequest( gatewayKey, phone)).
-            subscribeOn(Schedulers.io()).
-            observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { result ->
-                        response = result
-                        response.phone = phone
+                        response.target = target
                         onComplete(response)
                     },
                     { error ->
@@ -69,13 +52,11 @@ open class Merchant {
                     }
                 )
         }
-
-
     }
 
     fun verifyOtp(otpId:String, otp:String, onComplete: (Boolean) -> Unit){
         val fazpass by lazy { MerchantUseCase.start() }
-        fazpass.verifyOtp("Bearer ${Merchant.merchantKey}",VerifyOtpRequest( otpId, otp)).
+        fazpass.verifyOtp("Bearer $merchantKey",VerifyOtpRequest(otpId, otp)).
         subscribeOn(Schedulers.io()).
         observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -86,5 +67,80 @@ open class Merchant {
                     onComplete(false)
                 }
             )
+    }
+
+    fun sendOtp(target:String, otp:String, onComplete: (Response) -> Unit){
+        val fazpass by lazy { MerchantUseCase.start() }
+        var response = Response(false,"","send", "",target,Data("",otp,"","","","",""))
+        if(android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
+            fazpass.sendOtpByEmail(
+                "Bearer $merchantKey",
+                SendOtpRequestByEmail(gatewayKey, target, otp)).
+            subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        response = result
+                        response.target = target
+                        onComplete(response)
+                    },
+                    { error ->
+                        response.error = error.message
+                        onComplete(response)
+                    }
+                )
+        }else{
+            fazpass.sendOtpByPhone("Bearer $merchantKey",
+                SendOtpRequestByPhone(gatewayKey, target, otp)).
+            subscribeOn(Schedulers.io()).
+            observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        response = result
+                        response.target = target
+                        onComplete(response)
+                    },
+                    { error ->
+                        response.error = error.message
+                        onComplete(response)
+                    }
+                )
+        }
+    }
+
+    fun requestOtp(target:String, onComplete:(Response)->Unit){
+        val fazpass by lazy { MerchantUseCase.start() }
+        var response = Response(false,"","request", "",target,null)
+        if(android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
+            fazpass.requestOtpByEmail(
+                "Bearer $merchantKey",
+                RequestOtpByEmail(gatewayKey, target)
+            ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        response = result
+                        response.target = target
+                        onComplete(response)
+                    },
+                    { error ->
+                        response.error = error.message
+                        onComplete(response)
+                    }
+                )
+        }else{
+            fazpass.requestOtpByPhone("Bearer $merchantKey",RequestOtpByPhone(gatewayKey, target)).
+            subscribeOn(Schedulers.io()).
+            observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        response = result
+                        response.target = target
+                        onComplete(response)
+                    },
+                    { error ->
+                        response.error = error.message
+                        onComplete(response)
+                    }
+                )
+        }
     }
 }

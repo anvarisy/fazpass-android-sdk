@@ -1,19 +1,14 @@
 package com.fazpass.otp.model
 
-/**
- * Created by Anvarisy on 5/12/2022.
- * fazpass
- * anvarisy@fazpass.com
- */
-
-data class GenerateOtpResponse(
+data class Response(
     var status:Boolean,
     var message:String,
+    var type: String?,
     var error:String?,
-    var phone:String?,
-    var data: GenerateOtpData?
+    var target:String?,
+    var data: Data?
 ):java.io.Serializable
-data class GenerateOtpData(
+data class Data(
     var id: String?,
     var otp: String?,
     var prefix: String?,

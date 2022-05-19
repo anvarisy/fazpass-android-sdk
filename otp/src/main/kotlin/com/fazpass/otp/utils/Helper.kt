@@ -1,21 +1,12 @@
 package com.fazpass.otp.utils
 
-import android.app.Activity
 import android.text.*
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 
-
-/**
- * Created by Anvarisy on 5/17/2022.
- * fazpass
- * anvarisy@fazpass.com
- */
-class Helper {
+internal class Helper {
     companion object{
 
         internal fun TextView.makeLinks(vararg links: Pair<String, View.OnClickListener>) {
