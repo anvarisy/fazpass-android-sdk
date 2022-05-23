@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'maven-publish'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -27,8 +28,57 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        compose true
+    }
+}
+/*
+
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+
+
+def getVersionName = { ->
+    return "1.0.1" // Replace with version Name
 }
 
+def getArtificatId = { ->
+    return "otp" // Replace with library name ID
+}
+
+publishing {
+    publications {
+        bar(MavenPublication) {
+            groupId 'com.fazpass'
+            artifactId getArtificatId()
+            version getVersionName()
+            artifact("$buildDir/outputs/aar/${getArtificatId()}-release.aar")
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            */
+/** Configure path of your package repository on Github
+             *  Replace GITHUB_USERID with your/organisation Github userID and REPOSITORY with the repository name on GitHub
+             *//*
+
+            url = uri("https://maven.pkg.github.com/fazpass/fazpass-android-sdk")
+
+            credentials {
+                */
+/**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**//*
+
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+            }
+        }
+    }
+
+}
+
+*/
 
 dependencies {
 
@@ -47,4 +97,18 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:3.9.1"
 
     implementation 'io.github.chaosleung:pinview:1.4.4'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.fazpass'
+                artifactId = 'otp'
+                version = '1.0.1'
+            }
+        }
+    }
 }
