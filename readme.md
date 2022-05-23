@@ -11,7 +11,16 @@ This is the Official Android wrapper/library for Fazpass OTP API, that is compat
 Visit https://fazpass.com for more information about the product and see documentation at http://docs.fazpass.com for more technical details.
 
 ## Installation
-Please add this line into your gradle
+Gradle
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
 ```
  implementation 'com.github.fazpass:fazpass-android-sdk:1.0'
 ```
