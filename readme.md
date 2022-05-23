@@ -13,8 +13,17 @@ Visit https://fazpass.com for more information about the product and see documen
 ## Installation
 Please add this line into your gradle
 ```
- implementation 'https://github.com/fazpass/fazpass-android-sdk'
+ implementation 'com.github.fazpass:fazpass-android-sdk:1.0'
 ```
+Maven
+```
+<dependency>
+  <groupId>com.fazpass</groupId>
+  <artifactId>otp</artifactId>
+  <version>1.0.1</version>
+</dependency>
+```
+
 
 ## Usage
 ```kotlin
