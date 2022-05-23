@@ -25,31 +25,42 @@ import com.fazpass.otp.Fazpass
 
 //Generate your otp
  m.setGateway(GATEWAY_KEY)
- m.generateOtp(PHONE_NUMBER) { response->
+ m.generateOtp(PHONE_NUMBER/EMAIL) { response->
     //@TODO            
  }
+
+//Request your otp
+m.setGateway(GATEWAY_KEY)
+m.requestOtp(PHONE_NUMBER/EMAIL) { response->
+    //@TODO            
+}
+
+//Send your otp
+m.setGateway(GATEWAY_KEY)
+m.sendOtp(PHONE_NUMBER/EMAIL, OTP) { response->
+    //@TODO            
+}
 ```
 
 ### Response Attribute
 When generating otp was success, the response is an object with this structure
 ```kotlin
-data class GenerateOtpResponse(
+data class Response(
     var status:Boolean,
     var message:String,
+    var type: String?,
     var error:String?,
-    var phone:String?,
-    var data: GenerateOtpData?
+    var target:String?,
+    var data: Data?
 )
-
-data class GenerateOtpData(
+data class Data(
     var id: String?,
     var otp: String?,
+    var prefix: String?,
     var otp_length: String?,
     var channel: String?,
     var provider: String?,
-    var purpose: String?,
-    // This attribute only available for missed call
-    var prefix: String?,
+    var purpose: String?
 )
 ```
 We already serve it.
@@ -68,8 +79,8 @@ Only need one line and let us handle the verification.
  val m = Fazpass.initialize(MERCHANT_KEY)
 
  m.setGateway(GATEWAY_KEY)
- m.generateOtp(PHONE_NUMBER) { response->
-     Fazpass.loginPage(this, response) { status ->
+ m.generateOtp(PHONE_NUMBER/EMAIL) { response->
+     Fazpass.verificationPage(this, response) { status ->
 
      }          
  }
@@ -77,7 +88,6 @@ Only need one line and let us handle the verification.
 Note: this function need minimum build API MARSHMALLOW
 
 It looks like this
-
 <img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/fazpass_verification.jpeg" width="50%"/>
 
 
