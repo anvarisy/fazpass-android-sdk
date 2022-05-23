@@ -18,6 +18,7 @@
         <ImageView android:layout_width="match_parent" android:layout_height="match_parent"
                    app:srcCompat="@drawable/fazpass" android:id="@+id/imageView"/>
     </androidx.cardview.widget.CardView>
+    <!--
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -41,16 +42,86 @@
                 android:id="@+id/edtPhone" android:textSize="22sp" android:hint="85811751000"
                 android:maxLength="12" android:layout_marginLeft="10dp"/>
     </LinearLayout>
-    <EditText
-            android:layout_width="0dp"
+    -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:divider="@drawable/vertical_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <EditText
+            android:id="@+id/edtTarget"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:textSize="22sp"
-            android:id="@+id/edtEmail" android:layout_weight="1"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            android:layout_marginTop="24dp" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp" android:inputType="textEmailAddress" android:hint="your email address"/>
+            android:hint="your email / phone"
+            android:inputType="textEmailAddress|phone"
+            android:textSize="22sp" />
+
+        <Spinner
+            android:id="@+id/spnGateway"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnGenerate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rectangle_grey_border"
+            android:backgroundTint="#60c3c9"
+            android:text="GENERATE OTP"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_grey_border"
+            android:backgroundTint="#60c3c9"
+            android:text="REQUEST OTP"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rectangle_grey_border"
+                android:backgroundTint="#60c3c9"
+                android:text="SEND OTP"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/edtOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:hint="OTP"
+                android:inputType="number"
+                android:maxLength="8"
+                android:textSize="22sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+   <!--
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -96,6 +167,8 @@
                                                    android:text="EMAIL VERIFICATION"
                                                    android:textColor="@color/white" android:textSize="20sp"/>
     </LinearLayout>
+   -->
+
     <TextView
             android:text="fazpass.com"
             android:layout_width="wrap_content"

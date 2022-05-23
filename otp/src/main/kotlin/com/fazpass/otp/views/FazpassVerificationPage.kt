@@ -1,4 +1,4 @@
-package com.fazpass.otp
+package com.fazpass.otp.views
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -14,12 +14,14 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
+import com.fazpass.otp.Fazpass
+import com.fazpass.otp.Merchant
+import com.fazpass.otp.R
 import com.fazpass.otp.model.Response
 import com.fazpass.otp.utils.Helper.Companion.makeLinks
-import com.fazpass.otp.views.Loading
 import com.google.android.material.button.MaterialButton
 
-internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
+internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : Dialog(requireActivity(), theme) {
             override fun onBackPressed() {
@@ -45,7 +47,7 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Respons
         savedInstanceState: Bundle?
     ): View? {
         isCancelable = false
-        return inflater.inflate(R.layout.fazpass_login, container, false)
+        return inflater.inflate(R.layout.fazpass_verification, container, false)
     }
     override fun getTheme(): Int {
         return R.style.DialogTheme
@@ -117,7 +119,7 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Respons
             if(otpLength<=0){
                 dismiss()
             }else{
-                Loading.displayLoadingWithText(view.context,false)
+                Loading.showDialog(view.context,false)
                 val m = Merchant()
                 when (response.target) {
                     "generate" -> {
@@ -154,7 +156,7 @@ internal class FazpassLoginPage(onComplete:(Boolean)->Unit, otpResponse: Respons
     private fun verify(otp: String, context: Context){
         removeKeyboard()
         if(Fazpass.isOnline(context)){
-            Loading.displayLoadingWithText(context,false)
+            Loading.showDialog(context,false)
             val m = Merchant()
             val otpId = response.data?.id
             if (otpId != null) {

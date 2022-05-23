@@ -10,7 +10,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.fazpass.otp.model.Response
+import com.fazpass.otp.views.FazpassVerificationPage
 
 class Fazpass {
 
@@ -20,15 +23,23 @@ class Fazpass {
             return Merchant()
         }
 
-        fun loginPage(activity: AppCompatActivity, it:Response, onComplete:(Boolean)->Unit){
+        fun verificationPage(activity: AppCompatActivity, it:Response, onComplete:(Boolean)->Unit){
             val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             var view = activity.currentFocus
             if (view == null) {
                 view = View(activity)
             }
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            val dialogFragment = FazpassLoginPage(onComplete, it)
-            dialogFragment.show(activity.supportFragmentManager, "signature")
+            imm.hideSoftInputFromWindow(view.windowToken, 0);
+            val dialogFragment = FazpassVerificationPage(onComplete, it)
+            dialogFragment.show(activity.supportFragmentManager, "fazpass_verification")
+        }
+
+        fun dismissPage(activity: AppCompatActivity){
+            val prev: Fragment? = activity.supportFragmentManager.findFragmentByTag("fazpass_verification")
+            if (prev != null) {
+                val df: DialogFragment = prev as DialogFragment
+                df.dismiss()
+            }
         }
 
         @RequiresApi(Build.VERSION_CODES.M)

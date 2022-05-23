@@ -1,14 +1,166 @@
 package com.fazpass.sample
+import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import com.fazpass.otp.Fazpass
+import com.fazpass.otp.views.Loading
+
+
+private lateinit var spinnerGateway:Spinner
+private var gatewayKey = ""
+private lateinit var btnGenerate: AppCompatButton
+private lateinit var btnRequest: AppCompatButton
+private lateinit var btnSend: AppCompatButton
+private lateinit var edtTarget:EditText
+private lateinit var edtOtp:EditText
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        edtTarget = findViewById(R.id.edtTarget)
+        edtOtp = findViewById(R.id.edtOtp)
+
+        spinnerGateway = findViewById(R.id.spnGateway)
+        val spinnerAdapter = GatewayAdapter(this, MyGateway.gateways)
+        spinnerGateway.adapter = spinnerAdapter
+        spinnerGateway.onItemSelectedListener = object : AdapterView.OnItemSelectedListener,
+            AdapterView.OnItemClickListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                gatewayKey = MyGateway.gateways.get(p2).gatewayKey
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        btnGenerate = findViewById(R.id.btnGenerate)
+        btnGenerate.setOnClickListener {
+            if(formValid()){
+                Loading.showDialog(this, false)
+                generateOtp(edtTarget.text.toString())
+            }
+        }
+
+        btnRequest = findViewById(R.id.btnRequest)
+        btnRequest.setOnClickListener {
+            if (formValid()) {
+                Loading.showDialog(this, false)
+                requestOtp(edtTarget.text.toString())
+            }
+        }
+
+        btnSend = findViewById(R.id.btnSend)
+        btnSend.setOnClickListener {
+            if (formValid() ) {
+                if(edtOtp.text.toString() != ""){
+                    Loading.showDialog(this, false)
+                    sendOtp(edtTarget.text.toString(), edtOtp.text.toString())
+                }else{
+                    Toast.makeText(this,"Field otp can't be empty", Toast.LENGTH_LONG).show()
+                }
+
+            }
+        }
+
+
+    }
+
+    private fun generateOtp(target: String){
+        var m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        m.setGateway(gatewayKey)
+        m.generateOtp(target) { response ->
+            Loading.hideLoading()
+            if (!response.status){
+                Toast.makeText(this, "Error happen cause ${response.error}", Toast.LENGTH_LONG).show()
+            }else{
+                Fazpass.verificationPage(this, response) { status ->
+                    if(status){
+                        Fazpass.dismissPage(this)
+                        startHomeScreen()
+                    }
+                    Toast.makeText(this,"Verification status: $status",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun requestOtp(target:String){
+        var m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        m.setGateway(gatewayKey)
+        m.requestOtp(target) { response ->
+            Loading.hideLoading()
+            if (!response.status){
+                Toast.makeText(this, "Error happen cause ${response.error}", Toast.LENGTH_LONG).show()
+            }else{
+                Fazpass.verificationPage(this, response) { status ->
+                    if(status){
+                        Fazpass.dismissPage(this)
+                        startHomeScreen()
+                    }
+                    Toast.makeText(this,"Verification status: $status",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun sendOtp(target:String, otp: String){
+        var m = Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+        m.setGateway(gatewayKey)
+        m.sendOtp(target, otp) { response ->
+            Loading.hideLoading()
+            if (!response.status){
+                Toast.makeText(this, "Error happen cause ${response.error}", Toast.LENGTH_LONG).show()
+            }else{
+                Fazpass.verificationPage(this, response) { status ->
+                    if(status){
+                        Fazpass.dismissPage(this)
+                        startHomeScreen()
+                    }
+                    Toast.makeText(this,"Verification status: $status",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun formValid():Boolean{
+        return if (edtTarget.text.toString() == "") {
+            Toast.makeText(this,"Field email / phone can't be empty", Toast.LENGTH_LONG).show()
+            edtTarget.requestFocus()
+            false
+        }else if(gatewayKey == ""){
+            Toast.makeText(this,"Select gateway that will you use", Toast.LENGTH_LONG).show()
+            spinnerGateway.requestFocus()
+            false
+        }else{
+            true
+        }
+    }
+
+    private fun startHomeScreen(){
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+    }
+}
+
+
+
+
+
 /*
 
         myCountry = findViewById(R.id.edtCountryCode)
@@ -121,11 +273,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 */
-    }
-}
-
-
-
-
-
-
