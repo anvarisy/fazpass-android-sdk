@@ -22,7 +22,7 @@ Gradle
 ```
 
 ```
- implementation 'com.github.fazpass:fazpass-android-sdk:1.0'
+ implementation 'com.github.fazpass:fazpass-android-sdk:TAG'
 ```
 Maven
 ```
