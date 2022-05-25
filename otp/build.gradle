@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'maven-publish'
 }
+group = 'com.fazpass.otp'
+version = '1.4'
 
 android {
     compileSdk 32

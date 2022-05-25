@@ -106,7 +106,7 @@ Only need one line and let us handle the verification.
 Note: this function need minimum build API MARSHMALLOW
 
 It looks like this
-<img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/fazpass_verification.jpeg" width="50%"/>
+<img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/sample_verification.jpeg" width="50%"/>
 
 
 ## Conclusion
