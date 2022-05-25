@@ -28,45 +28,6 @@ android {
     }
 }
 
-
-
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
-
-
-def getVersionName = { ->
-    return "1.0.2" // Replace with version Name
-}
-
-def getArtifactId = { ->
-    return "otp" // Replace with library name ID
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            bar(MavenPublication) {
-                groupId 'com.fazpass'
-                artifactId getArtifactId()
-                version getVersionName()
-                artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
-            }
-        }
-
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/fazpass/fazpass-android-sdk")
-                credentials {
-                    username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-                    password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
-                }
-            }
-        }
-
-    }
-}
-
 dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
