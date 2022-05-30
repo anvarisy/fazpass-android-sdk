@@ -16,5 +16,6 @@
     <string name="anvarisy_fazpass_com">anvarisy@fazpass.com</string>
     <string name="don_t_have_account_register">Don\'t have account ? </string>
     <string name="register"><u>register</u></string>
+    <string name="your_email_phone">your email/phone</string>
 
 </resources>

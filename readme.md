@@ -24,14 +24,6 @@ Gradle
 ```
  implementation 'com.github.fazpass:fazpass-android-sdk:TAG'
 ```
-Maven
-```
-<dependency>
-  <groupId>com.fazpass</groupId>
-  <artifactId>otp</artifactId>
-  <version>1.0.1</version>
-</dependency>
-```
 
 
 ## Usage
@@ -41,23 +33,12 @@ import com.fazpass.otp.Fazpass
 // initialize an object
  val m = Fazpass.initialize(MERCHANT_KEY)
 
-//Generate your otp
- m.setGateway(GATEWAY_KEY)
- m.generateOtp(PHONE_NUMBER/EMAIL) { response->
-    //@TODO            
- }
-
 //Request your otp
 m.setGateway(GATEWAY_KEY)
 m.requestOtp(PHONE_NUMBER/EMAIL) { response->
     //@TODO            
 }
 
-//Send your otp
-m.setGateway(GATEWAY_KEY)
-m.sendOtp(PHONE_NUMBER/EMAIL, OTP) { response->
-    //@TODO            
-}
 ```
 
 ### Response Attribute
@@ -91,23 +72,37 @@ We already serve it.
 ```
 
 ## Template
-If you feel lazy to create your validation page, we also have our validation page.
-Only need one line and let us handle the verification.
+If you feel lazy to create your generate OTP page, You can call our activity from an activity result 
 ```kotlin
- val m = Fazpass.initialize(MERCHANT_KEY)
+private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+    if (result.resultCode == Activity.RESULT_OK) {
+        startHomeScreen()
+    }
+}
+@RequiresApi(Build.VERSION_CODES.M)
+override fun onCreate(savedInstanceState: Bundle?) {
+    startForResult.launch(Fazpass.requestPage(this, GATEWAY_KEY))
+    }
+```
+Or maybe you just need verification page, We also have default dialog verification page
+```kotlin
+m.setGateway(GATEWAY_KEY)
+m.requestOtp(PHONE_NUMBER/EMAIL) { response->
+    Fazpass.verificationPage(this, response) { status ->
 
- m.setGateway(GATEWAY_KEY)
- m.generateOtp(PHONE_NUMBER/EMAIL) { response->
-     Fazpass.verificationPage(this, response) { status ->
-
-     }          
- }
+    }
+}
 ```
 Note: this function need minimum build API MARSHMALLOW
 
-It looks like this
-<img src="https://raw.githubusercontent.com/fazpass/fazpass-android-sdk/main/.github/workflows/sample_verification.jpeg" width="50%"/>
+It is some sample of our template
 
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/ss%20request%20page.jpeg?alt=media&token=d58ef9f4-9c14-4c49-8ad2-25cb2484ab2c" width="27%"/>
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_verification.jpeg?alt=media&token=2b62a77f-d05c-4609-84c5-08a749f44a8c" width="27%"/>
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/saple_missedcall.jpeg?alt=media&token=3e68cf7c-5133-41c1-a813-85ea74f3d97f" width="27%"/>
+
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_sms.jpeg?alt=media&token=7a2a7ec9-4dfa-47cc-bcf9-26e78de8796a" width="27%"/>
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_email.jpeg?alt=media&token=e46f13e3-462a-4183-bb3b-a6d8217cd1c0" width="27%"/>
 
 ## Conclusion
 We will try to always make it simple and secure

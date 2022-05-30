@@ -1,11 +1,10 @@
-package com.fazpass.otp.views
+package com.fazpass.otp
 
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
-import com.fazpass.otp.R
 
 object Loading {
     var dialog: Dialog? = null //obj

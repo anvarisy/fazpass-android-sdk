@@ -9,11 +9,15 @@
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/app/src/main/res/layout/activity_splash_screen.xml" value="0.22826086956521738" />
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/app/src/main/res/layout/home_activity.xml" value="0.1" />
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/otp/src/main/res/layout/fazpass_loading.xml" value="0.1" />
+        <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/otp/src/main/res/layout/fazpass_request.xml" value="0.1" />
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/otp/src/main/res/layout/fazpass_verification.xml" value="0.1" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

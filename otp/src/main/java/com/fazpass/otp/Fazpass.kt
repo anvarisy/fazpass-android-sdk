@@ -2,22 +2,26 @@ package com.fazpass.otp
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.fazpass.otp.model.Response
-import com.fazpass.otp.views.FazpassVerificationPage
 
 class Fazpass {
 
     companion object{
+
         fun initialize(key:String):Merchant{
             Merchant.merchantKey = key
             return Merchant()
@@ -63,6 +67,22 @@ class Fazpass {
                 }
             }
             return false
+        }
+
+        fun requestPage(activity: AppCompatActivity, gatewayKey: String): Intent{
+            return startPage(activity,gatewayKey,"Request")
+        }
+
+        fun generatePage(activity: AppCompatActivity, gatewayKey: String): Intent{
+           return startPage(activity,gatewayKey,"Generate")
+        }
+
+        private fun startPage(activity: AppCompatActivity, gatewayKey: String, type: String):Intent{
+
+            return (Intent(activity, FazpassRequestPage::class.java).
+            putExtra("fazpass_request_type",type).
+            putExtra("fazpass_request_gateway",gatewayKey))
+
         }
 
     }
