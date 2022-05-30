@@ -32,16 +32,16 @@ class GatewayAdapter(val context: Context, var dataSource: List<Gateway>) : Base
         return view
     }
 
-    override fun getItem(position: Int): Any? {
-        return dataSource[position];
+    override fun getItem(position: Int): Any {
+        return dataSource[position]
     }
 
     override fun getCount(): Int {
-        return dataSource.size;
+        return dataSource.size
     }
 
     override fun getItemId(position: Int): Long {
-        return position.toLong();
+        return position.toLong()
     }
 
     private class ItemHolder(row: View?) {
@@ -50,7 +50,7 @@ class GatewayAdapter(val context: Context, var dataSource: List<Gateway>) : Base
 
         init {
             label = row?.findViewById(R.id.txtGatewayName) as TextView
-            img = row?.findViewById(R.id.imgGatewayLogo) as ImageView
+            img = row.findViewById(R.id.imgGatewayLogo) as ImageView
         }
     }
 
