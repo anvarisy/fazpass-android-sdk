@@ -10,6 +10,7 @@ open class Merchant {
     companion object{
         internal var merchantKey: String = ""
         internal var gatewayKey: String = ""
+        internal var baseUrl: String = ""
     }
 
     fun setGateway(gateway: String){

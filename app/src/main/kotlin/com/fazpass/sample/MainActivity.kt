@@ -54,7 +54,8 @@ class MainActivity : AppCompatActivity() {
         btnGenerate = findViewById(R.id.btnGenerate)
         btnGenerate.setOnClickListener {
             if (formValid()) {
-                Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+                Fazpass.initialize("http://34.101.82.250:3002",
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
                 startForResult.launch(Fazpass.generatePage(this, gatewayKey))
             }
         }
@@ -62,7 +63,8 @@ class MainActivity : AppCompatActivity() {
         btnRequest = findViewById(R.id.btnRequest)
         btnRequest.setOnClickListener {
             if (formValid()) {
-                Fazpass.initialize("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+                Fazpass.initialize("http://34.101.82.250:3002",
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
                 startForResult.launch(Fazpass.requestPage(this, gatewayKey))
             }
 

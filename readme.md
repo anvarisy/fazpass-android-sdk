@@ -31,7 +31,8 @@ Gradle
 import com.fazpass.otp.Fazpass
 
 // initialize an object
- val m = Fazpass.initialize(MERCHANT_KEY)
+// Fill the url with staging mode or production url
+ val m = Fazpass.initialize("http://34.101.82.250:3002", MERCHANT_KEY)
 
 //Request your otp
 m.setGateway(GATEWAY_KEY)
@@ -93,16 +94,12 @@ m.requestOtp(PHONE_NUMBER/EMAIL) { response->
     }
 }
 ```
-Note: this function need minimum build API MARSHMALLOW
+Note: this function need minimum build API 13 / 6.0 / MARSHMALLOW
 
 It is some sample of our template
 
-<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/ss%20request%20page.jpeg?alt=media&token=d58ef9f4-9c14-4c49-8ad2-25cb2484ab2c" width="27%"/>
-<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_verification.jpeg?alt=media&token=2b62a77f-d05c-4609-84c5-08a749f44a8c" width="27%"/>
-<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/saple_missedcall.jpeg?alt=media&token=3e68cf7c-5133-41c1-a813-85ea74f3d97f" width="27%"/>
-
-<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_sms.jpeg?alt=media&token=7a2a7ec9-4dfa-47cc-bcf9-26e78de8796a" width="27%"/>
-<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_email.jpeg?alt=media&token=e46f13e3-462a-4183-bb3b-a6d8217cd1c0" width="27%"/>
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/ss%20request%20page.jpeg?alt=media&token=d58ef9f4-9c14-4c49-8ad2-25cb2484ab2c" width="27%"/> <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_verification.jpeg?alt=media&token=2b62a77f-d05c-4609-84c5-08a749f44a8c" width="27%"/> <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/saple_missedcall.jpeg?alt=media&token=3e68cf7c-5133-41c1-a813-85ea74f3d97f" width="27%"/>
+<img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_sms.jpeg?alt=media&token=7a2a7ec9-4dfa-47cc-bcf9-26e78de8796a" width="27%"/> <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_email.jpeg?alt=media&token=e46f13e3-462a-4183-bb3b-a6d8217cd1c0" width="27%"/>
 
 ## Conclusion
 We will try to always make it simple and secure

@@ -1,8 +1,10 @@
 package com.fazpass.otp.utils
 
+import com.fazpass.otp.Merchant
+
 internal class Cons{
     companion object{
-        const val BASE_URL: String = "http://34.101.82.250:3002/v1/otp/"
+        var BASE_URL: String = "${Merchant.baseUrl}/v1/otp/"
     }
 }
 

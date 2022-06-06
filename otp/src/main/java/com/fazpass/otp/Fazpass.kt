@@ -22,7 +22,8 @@ class Fazpass {
 
     companion object{
 
-        fun initialize(key:String):Merchant{
+        fun initialize(url: String, key:String):Merchant{
+            Merchant.baseUrl = url
             Merchant.merchantKey = key
             return Merchant()
         }
