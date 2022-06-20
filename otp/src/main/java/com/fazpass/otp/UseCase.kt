@@ -1,7 +1,6 @@
-package com.fazpass.otp.usecase
+package com.fazpass.otp
 
 import com.fazpass.otp.model.*
-import com.fazpass.otp.utils.Cons
 import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
@@ -13,7 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-interface MerchantUseCase {
+internal interface MerchantUseCase {
     @POST("generate") fun generateOtpByPhone(@Header("Authorization") token:String, @Body requestBody: RequestOtpByPhone): Observable<Response>
     @POST("generate") fun generateOtpByEmail(@Header("Authorization") token:String, @Body requestBody: RequestOtpByEmail): Observable<Response>
     @POST("verify") fun verifyOtp(@Header("Authorization") token:String, @Body requestBody: VerifyOtpRequest): Completable
@@ -23,7 +22,7 @@ interface MerchantUseCase {
     @POST("send") fun sendOtpByEmail(@Header("Authorization") token:String, @Body requestBody: SendOtpRequestByEmail):Observable<Response>
 
     companion object{
-        fun start():MerchantUseCase{
+        fun start(): MerchantUseCase {
             val clientBuilder = OkHttpClient.Builder()
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -32,7 +31,7 @@ interface MerchantUseCase {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Cons.BASE_URL)
-//                .client(clientBuilder.build())
+                .client(clientBuilder.build())
                 .build()
 
             return retrofit.create(MerchantUseCase::class.java)

@@ -37,8 +37,8 @@ class FazpassRequestPage : AppCompatActivity() {
 
     private fun generate(){
         val m = Merchant()
-        m.setGateway(gatewayKey.toString())
-        Loading.showDialog(this,false)
+        m.setGateway(gatewayKey)
+        Loading.showLoadingDialog(this,false)
         m.generateOtp(edtFazpassTarget.text.toString()) { it ->
             Fazpass.verificationPage(this, it) { status ->
                 if(status){
@@ -53,7 +53,7 @@ class FazpassRequestPage : AppCompatActivity() {
 
     private fun request(){
         val m = Merchant()
-        m.setGateway(gatewayKey.toString())
+        m.setGateway(gatewayKey)
         m.requestOtp(edtFazpassTarget.text.toString()) { it ->
             Fazpass.verificationPage(this, it) { status ->
                 if(status){

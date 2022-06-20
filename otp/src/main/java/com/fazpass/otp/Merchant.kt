@@ -1,7 +1,6 @@
 package com.fazpass.otp
 
 import com.fazpass.otp.model.*
-import com.fazpass.otp.usecase.MerchantUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -14,7 +13,7 @@ open class Merchant {
     }
 
     fun setGateway(gateway: String){
-        Merchant.gatewayKey = gateway
+        gatewayKey = gateway
     }
 
     fun generateOtp(target:String, onComplete:(Response)->Unit){

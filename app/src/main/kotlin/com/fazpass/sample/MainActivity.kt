@@ -1,7 +1,6 @@
 package com.fazpass.sample
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -14,14 +13,14 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.fazpass.otp.Fazpass
-import com.fazpass.otp.Loading
 
 
-private lateinit var spinnerGateway:Spinner
 private var gatewayKey = ""
 private lateinit var btnGenerate: AppCompatButton
 private lateinit var btnRequest: AppCompatButton
-
+private const val BASE_URL = "http://34.101.82.250:3002"
+private const val MERCHANT_KEY_STAGING= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8"
+//private val MERCHANT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjo3fQ._BtZy1Zp3UAPz4fbgaXeAhA8rYgV2c2Y-its_WIJi9I"
 class MainActivity : AppCompatActivity() {
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -33,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        spinnerGateway = findViewById(R.id.spnGateway)
+        val spinnerGateway = findViewById<Spinner>(R.id.spnGateway)
         val spinnerAdapter = GatewayAdapter(this, MyGateway.gateways)
         spinnerGateway.adapter = spinnerAdapter
         spinnerGateway.onItemSelectedListener = object : AdapterView.OnItemSelectedListener,
@@ -54,8 +53,7 @@ class MainActivity : AppCompatActivity() {
         btnGenerate = findViewById(R.id.btnGenerate)
         btnGenerate.setOnClickListener {
             if (formValid()) {
-                Fazpass.initialize("http://34.101.82.250:3002",
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+                Fazpass.initialize(BASE_URL, MERCHANT_KEY_STAGING)
                 startForResult.launch(Fazpass.generatePage(this, gatewayKey))
             }
         }
@@ -63,8 +61,7 @@ class MainActivity : AppCompatActivity() {
         btnRequest = findViewById(R.id.btnRequest)
         btnRequest.setOnClickListener {
             if (formValid()) {
-                Fazpass.initialize("http://34.101.82.250:3002",
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8")
+                Fazpass.initialize(BASE_URL, MERCHANT_KEY_STAGING)
                 startForResult.launch(Fazpass.requestPage(this, gatewayKey))
             }
 
@@ -74,7 +71,6 @@ class MainActivity : AppCompatActivity() {
     private fun formValid():Boolean{
         return if(gatewayKey == ""){
             Toast.makeText(this,"Select gateway that will you use", Toast.LENGTH_LONG).show()
-            spinnerGateway.requestFocus()
             false
         }else{
             true

@@ -1,10 +1,7 @@
-package com.fazpass.otp.utils
+package com.fazpass.trusted_device
 
-import com.fazpass.otp.Merchant
-
-internal class Cons{
+internal class Cons {
     companion object{
         var BASE_URL: String = "${Merchant.baseUrl}/v1/otp/"
     }
 }
-

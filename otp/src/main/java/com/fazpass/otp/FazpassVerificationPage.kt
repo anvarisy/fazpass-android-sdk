@@ -15,7 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
 import com.fazpass.otp.model.Response
-import com.fazpass.otp.utils.Helper.Companion.makeLinks
+import com.fazpass.otp.Helper.Companion.makeLinks
 import com.google.android.material.button.MaterialButton
 
 internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
@@ -116,7 +116,7 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
             if(otpLength<=0){
                 dismiss()
             }else{
-                Loading.showDialog(view.context, false)
+                Loading.showLoadingDialog(view.context, false)
                 val m = Merchant()
                 when (response.target) {
                     "generate" -> {
@@ -153,7 +153,7 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
     private fun verify(otp: String, context: Context){
         removeKeyboard()
         if(Fazpass.isOnline(context)){
-            Loading.showDialog(context, false)
+            Loading.showLoadingDialog(context, false)
             val m = Merchant()
             val otpId = response.data?.id
             if (otpId != null) {

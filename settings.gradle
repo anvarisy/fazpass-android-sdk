@@ -9,3 +9,5 @@ dependencyResolutionManagement {
 rootProject.name = "FazpassAndroidSDK"
 include ':app'
 include ':otp'
+include ':trusted_device'
+include ':header_enrichment'

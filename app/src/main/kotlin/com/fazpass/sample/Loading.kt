@@ -1,4 +1,4 @@
-package com.fazpass.otp
+package com.fazpass.sample
 
 import android.app.Dialog
 import android.content.Context
@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
 
-internal object Loading {
+object Loading {
     private var dialog: Dialog? = null //obj
     fun showLoadingDialog(context: Context?, cancelable: Boolean) { // function -- context(parent (reference))
         dialog = Dialog(context!!)

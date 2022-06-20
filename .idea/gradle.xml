@@ -11,7 +11,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/header_enrichment" />
             <option value="$PROJECT_DIR$/otp" />
+            <option value="$PROJECT_DIR$/trusted_device" />
           </set>
         </option>
       </GradleProjectSettings>
