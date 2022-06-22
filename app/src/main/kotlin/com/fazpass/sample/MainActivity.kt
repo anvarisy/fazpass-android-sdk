@@ -12,7 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import com.fazpass.otp.Fazpass
+import com.fazpass.otp.FazpassOtp
 
 
 private var gatewayKey = ""
@@ -22,7 +22,8 @@ private const val BASE_URL = "http://34.101.82.250:3002"
 private const val MERCHANT_KEY_STAGING= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8"
 //private val MERCHANT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjo3fQ._BtZy1Zp3UAPz4fbgaXeAhA8rYgV2c2Y-its_WIJi9I"
 class MainActivity : AppCompatActivity() {
-    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
             startHomeScreen()
         }
@@ -53,16 +54,16 @@ class MainActivity : AppCompatActivity() {
         btnGenerate = findViewById(R.id.btnGenerate)
         btnGenerate.setOnClickListener {
             if (formValid()) {
-                Fazpass.initialize(BASE_URL, MERCHANT_KEY_STAGING)
-                startForResult.launch(Fazpass.generatePage(this, gatewayKey))
+                FazpassOtp.initialize(BASE_URL, MERCHANT_KEY_STAGING)
+                startForResult.launch(FazpassOtp.generatePage(this, gatewayKey))
             }
         }
 
         btnRequest = findViewById(R.id.btnRequest)
         btnRequest.setOnClickListener {
             if (formValid()) {
-                Fazpass.initialize(BASE_URL, MERCHANT_KEY_STAGING)
-                startForResult.launch(Fazpass.requestPage(this, gatewayKey))
+                FazpassOtp.initialize(BASE_URL, MERCHANT_KEY_STAGING)
+                startForResult.launch(FazpassOtp.requestPage(this, gatewayKey))
             }
 
         }

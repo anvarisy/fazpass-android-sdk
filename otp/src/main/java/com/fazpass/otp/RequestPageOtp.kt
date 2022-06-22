@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 
 
-class FazpassRequestPage : AppCompatActivity() {
+internal class RequestPageOtp : AppCompatActivity() {
     private lateinit var btnRequest: AppCompatButton
     private lateinit var edtFazpassTarget: EditText
     var gatewayKey = ""
@@ -36,11 +36,11 @@ class FazpassRequestPage : AppCompatActivity() {
     }
 
     private fun generate(){
-        val m = Merchant()
+        val m = Otp()
         m.setGateway(gatewayKey)
-        Loading.showLoadingDialog(this,false)
+        LoadingDialogOtp.showLoadingDialog(this,false)
         m.generateOtp(edtFazpassTarget.text.toString()) { it ->
-            Fazpass.verificationPage(this, it) { status ->
+            FazpassOtp.verificationPage(this, it) { status ->
                 if(status){
                     val resultIntent = Intent()
                     resultIntent.putExtra("status", status)
@@ -52,10 +52,10 @@ class FazpassRequestPage : AppCompatActivity() {
     }
 
     private fun request(){
-        val m = Merchant()
+        val m = Otp()
         m.setGateway(gatewayKey)
         m.requestOtp(edtFazpassTarget.text.toString()) { it ->
-            Fazpass.verificationPage(this, it) { status ->
+            FazpassOtp.verificationPage(this, it) { status ->
                 if(status){
                     val resultIntent = Intent()
                     resultIntent.putExtra("status", status)

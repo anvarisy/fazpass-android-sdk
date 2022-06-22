@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Window
 
-internal object Loading {
+internal object LoadingDialogOtp {
     private var dialog: Dialog? = null //obj
     fun showLoadingDialog(context: Context?, cancelable: Boolean) { // function -- context(parent (reference))
         dialog = Dialog(context!!)

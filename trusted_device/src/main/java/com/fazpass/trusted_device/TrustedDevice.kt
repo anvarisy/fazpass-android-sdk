@@ -1,6 +1,6 @@
 package com.fazpass.trusted_device
 
-open class Merchant {
+open class TrustedDevice {
 
     companion object {
         internal var merchantKey: String = ""

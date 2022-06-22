@@ -5,27 +5,24 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.fazpass.otp.model.Response
 
-class Fazpass {
+class FazpassOtp {
 
     companion object{
 
-        fun initialize(url: String, key:String):Merchant{
-            Merchant.baseUrl = url
-            Merchant.merchantKey = key
-            return Merchant()
+        fun initialize(url: String, key:String):Otp{
+            Otp.baseUrl = url
+            Otp.merchantKey = key
+            return Otp()
         }
 
         fun verificationPage(activity: AppCompatActivity, it:Response, onComplete:(Boolean)->Unit){
@@ -35,7 +32,7 @@ class Fazpass {
                 view = View(activity)
             }
             imm.hideSoftInputFromWindow(view.windowToken, 0);
-            val dialogFragment = FazpassVerificationPage(onComplete, it)
+            val dialogFragment = VerificationPageOtp(onComplete, it)
             dialogFragment.show(activity.supportFragmentManager, "fazpass_verification")
         }
 
@@ -78,7 +75,7 @@ class Fazpass {
 
         private fun startPage(activity: AppCompatActivity, gatewayKey: String, type: String):Intent{
 
-            return (Intent(activity, FazpassRequestPage::class.java).
+            return (Intent(activity, RequestPageOtp::class.java).
             putExtra("fazpass_request_type",type).
             putExtra("fazpass_request_gateway",gatewayKey))
 

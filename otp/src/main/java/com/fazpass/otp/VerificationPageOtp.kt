@@ -15,10 +15,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
 import com.fazpass.otp.model.Response
-import com.fazpass.otp.Helper.Companion.makeLinks
+import com.fazpass.otp.HelperOtp.Companion.makeLinks
 import com.google.android.material.button.MaterialButton
 
-internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
+internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : Dialog(requireActivity(), theme) {
             override fun onBackPressed() {
@@ -116,13 +116,13 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
             if(otpLength<=0){
                 dismiss()
             }else{
-                Loading.showLoadingDialog(view.context, false)
-                val m = Merchant()
+                LoadingDialogOtp.showLoadingDialog(view.context, false)
+                val m = Otp()
                 when (response.target) {
                     "generate" -> {
                         response.target?.let { target -> m.generateOtp(target) { it->
                             response = it
-                            Loading.hideLoading()
+                            LoadingDialogOtp.hideLoading()
                         } }
                     }
                     "send" -> {
@@ -130,7 +130,7 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
                             response.data?.otp?.let { otp ->
                                 m.sendOtp(target, otp) { it->
                                     response = it
-                                    Loading.hideLoading()
+                                    LoadingDialogOtp.hideLoading()
                                 }
                             }
                         }
@@ -138,7 +138,7 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
                     "request" -> {
                         response.target?.let { target -> m.requestOtp(target) { it->
                             response = it
-                            Loading.hideLoading()
+                            LoadingDialogOtp.hideLoading()
                         } }
                     }
                 }
@@ -152,17 +152,17 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun verify(otp: String, context: Context){
         removeKeyboard()
-        if(Fazpass.isOnline(context)){
-            Loading.showLoadingDialog(context, false)
-            val m = Merchant()
+        if(FazpassOtp.isOnline(context)){
+            LoadingDialogOtp.showLoadingDialog(context, false)
+            val m = Otp()
             val otpId = response.data?.id
             if (otpId != null) {
                 m.verifyOtp(otpId, otp){
-                    Loading.hideLoading()
+                    LoadingDialogOtp.hideLoading()
                     complete(it)
                 }
             }else{
-                Loading.hideLoading()
+                LoadingDialogOtp.hideLoading()
                 complete(false)
             }
         }else{
@@ -177,7 +177,7 @@ internal class FazpassVerificationPage(onComplete:(Boolean)->Unit, otpResponse: 
         if (view == null) {
             view = View(activity)
         }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
 

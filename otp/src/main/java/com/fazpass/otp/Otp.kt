@@ -4,7 +4,7 @@ import com.fazpass.otp.model.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-open class Merchant {
+open class Otp {
 
     companion object{
         internal var merchantKey: String = ""
@@ -17,7 +17,7 @@ open class Merchant {
     }
 
     fun generateOtp(target:String, onComplete:(Response)->Unit){
-         val fazpass by lazy { MerchantUseCase.start() }
+        val fazpass by lazy { UseCaseOtp.start() }
         var response = Response(false,"","generate", "",target,null)
          if(android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
              fazpass.generateOtpByEmail(
@@ -35,7 +35,6 @@ open class Merchant {
                          onComplete(response)
                      }
                  )
-//        }else if(android.util.Patterns.PHONE.matcher(target).matches()){
             }else{
             fazpass.generateOtpByPhone("Bearer $merchantKey",RequestOtpByPhone(gatewayKey, target)).
             subscribeOn(Schedulers.io()).
@@ -55,7 +54,7 @@ open class Merchant {
     }
 
     fun verifyOtp(otpId:String, otp:String, onComplete: (Boolean) -> Unit){
-        val fazpass by lazy { MerchantUseCase.start() }
+        val fazpass by lazy { UseCaseOtp.start() }
         fazpass.verifyOtp("Bearer $merchantKey",VerifyOtpRequest(otpId, otp)).
         subscribeOn(Schedulers.io()).
         observeOn(AndroidSchedulers.mainThread())
@@ -70,7 +69,7 @@ open class Merchant {
     }
 
     fun sendOtp(target:String, otp:String, onComplete: (Response) -> Unit){
-        val fazpass by lazy { MerchantUseCase.start() }
+        val fazpass by lazy { UseCaseOtp.start() }
         var response = Response(false,"","send", "",target,Data("",otp,"","","","",""))
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
             fazpass.sendOtpByEmail(
@@ -108,7 +107,7 @@ open class Merchant {
     }
 
     fun requestOtp(target:String, onComplete:(Response)->Unit){
-        val fazpass by lazy { MerchantUseCase.start() }
+        val fazpass by lazy { UseCaseOtp.start() }
         var response = Response(false,"","request", "",target,null)
         if(android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
             fazpass.requestOtpByEmail(

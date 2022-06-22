@@ -28,11 +28,11 @@ Gradle
 
 ## Usage
 ```kotlin
-import com.fazpass.otp.Fazpass
+import com.fazpass.otp.FazpassOtp
 
 // initialize an object
 // Fill the url with staging mode or production url
- val m = Fazpass.initialize("http://34.101.82.250:3002", MERCHANT_KEY)
+ val m = FazpassOtp.initialize("http://34.101.82.250:3002", MERCHANT_KEY)
 
 //Request your otp
 m.setGateway(GATEWAY_KEY)
@@ -82,14 +82,14 @@ private val startForResult = registerForActivityResult(ActivityResultContracts.S
 }
 @RequiresApi(Build.VERSION_CODES.M)
 override fun onCreate(savedInstanceState: Bundle?) {
-    startForResult.launch(Fazpass.requestPage(this, GATEWAY_KEY))
+    startForResult.launch(FazpassOtp.requestPage(this, GATEWAY_KEY))
     }
 ```
 Or maybe you just need verification page, We also have default dialog verification page
 ```kotlin
 m.setGateway(GATEWAY_KEY)
 m.requestOtp(PHONE_NUMBER/EMAIL) { response->
-    Fazpass.verificationPage(this, response) { status ->
+    FazpassOtp.verificationPage(this, response) { status ->
 
     }
 }

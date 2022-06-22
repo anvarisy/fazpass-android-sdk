@@ -6,7 +6,7 @@ import android.text.style.ClickableSpan
 import android.view.View
 import android.widget.TextView
 
-internal class Helper {
+internal class HelperOtp {
     companion object{
 
         internal fun TextView.makeLinks(vararg links: Pair<String, View.OnClickListener>) {
