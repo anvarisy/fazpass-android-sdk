@@ -2,19 +2,27 @@ package com.fazpass.otp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import com.fazpass.otp.FazpassOtp.Companion.enableService
+import com.fazpass.otp.FazpassOtp.Companion.registerActivity
+import com.fazpass.otp.FazpassOtp.Companion.unRegisterActivity
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 internal class RequestPageOtp : AppCompatActivity() {
     private lateinit var btnRequest: AppCompatButton
     private lateinit var edtFazpassTarget: EditText
     var gatewayKey = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fazpass_request)
+        enableService()
         val extras = intent.extras
         val requestType = extras?.getString("fazpass_request_type")
         gatewayKey = extras?.getString("fazpass_request_gateway").toString()

@@ -3,6 +3,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -13,12 +14,13 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.fazpass.otp.FazpassOtp
+import com.fazpass.otp.FazpassOtp.Companion.enablePermissions
 
 
 private var gatewayKey = ""
 private lateinit var btnGenerate: AppCompatButton
 private lateinit var btnRequest: AppCompatButton
-private const val BASE_URL = "http://34.101.82.250:3002"
+private const val BASE_URL = "http://34.101.82.250:3002/v1/otp/"
 private const val MERCHANT_KEY_STAGING= "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjoxM30.SbTzA7ftEfUtkx0Rdt_eoXrafx1X9kf2SHccS_G5jS8"
 //private val MERCHANT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZGVudGlmaWVyIjo3fQ._BtZy1Zp3UAPz4fbgaXeAhA8rYgV2c2Y-its_WIJi9I"
 class MainActivity : AppCompatActivity() {
@@ -32,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        enablePermissions()
         val spinnerGateway = findViewById<Spinner>(R.id.spnGateway)
         val spinnerAdapter = GatewayAdapter(this, MyGateway.gateways)
         spinnerGateway.adapter = spinnerAdapter

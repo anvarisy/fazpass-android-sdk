@@ -32,7 +32,7 @@ import com.fazpass.otp.FazpassOtp
 
 // initialize an object
 // Fill the url with staging mode or production url
- val m = FazpassOtp.initialize("http://34.101.82.250:3002", MERCHANT_KEY)
+ val m = FazpassOtp.initialize("http://34.101.82.250:3002/v1/otp/", MERCHANT_KEY)
 
 //Request your otp
 m.setGateway(GATEWAY_KEY)
@@ -73,7 +73,7 @@ We already serve it.
 ```
 
 ## Template
-If you feel lazy to create your generate OTP page, You can call our activity from an activity result 
+If you feel lazy to create your request OTP page, You can call our activity from an activity result 
 ```kotlin
 private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
     if (result.resultCode == Activity.RESULT_OK) {
@@ -101,6 +101,66 @@ It is some sample of our template
 <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/ss%20request%20page.jpeg?alt=media&token=d58ef9f4-9c14-4c49-8ad2-25cb2484ab2c" width="27%"/> <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_verification.jpeg?alt=media&token=2b62a77f-d05c-4609-84c5-08a749f44a8c" width="27%"/> <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/saple_missedcall.jpeg?alt=media&token=3e68cf7c-5133-41c1-a813-85ea74f3d97f" width="27%"/>
 <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_sms.jpeg?alt=media&token=7a2a7ec9-4dfa-47cc-bcf9-26e78de8796a" width="27%"/> <img src="https://firebasestorage.googleapis.com/v0/b/anvarisy-tech.appspot.com/o/sample_email.jpeg?alt=media&token=e46f13e3-462a-4183-bb3b-a6d8217cd1c0" width="27%"/>
 
+## LISTEN INCOMING OTP
+For you that need to auto read message and incoming call, we already create the function to handle that
+Follow this step to do that
+### Manifest
+Add these permissions and also intent filter into your activity that will request the OTP
+```manifest
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="true" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    
+<application>
+    <activity>
+     <intent-filter>
+       <action android:name="android.intent.action.VIEW" />
+       <action android:name="android.intent.action.DIAL" />
+       <category android:name="android.intent.category.DEFAULT" />
+       <category android:name="android.intent.category.BROWSABLE" />
+       <data android:scheme="tel" />
+     </intent-filter>
+    
+     <intent-filter>
+        <action android:name="android.intent.action.DIAL" />
+        <category android:name="android.intent.category.DEFAULT" />
+     </intent-filter>
+    </activity>
+</application>
+```
+Note : If you use our default request page you don't need to do this
+
+### Activity
+Enable our service with call this function in your activity
+```kotlin
+enableService()
+```
+After you enable our service, now you need to register your fragment or dialog that will receive the OTP
+```kotlin
+    override fun onStart() {
+        super.onStart()
+        registerDialog()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unRegisterDialog()
+    }
+```
+Now you can get your OTP
+```kotlin
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOtpRead(otp: String){
+        Log.d("READ OTP",otp)
+    }
+```
+Note: for auto read incoming call OTP, it needs minimum build 7.0 / NOUGAT
 ## Conclusion
 We will try to always make it simple and secure
 <img src="https://github.githubassets.com/images/icons/emoji/unicode/2665.png?v8" width="20" height="20"/>

@@ -1,5 +1,6 @@
 package com.fazpass.otp
 
+import androidx.appcompat.app.AppCompatActivity
 import com.fazpass.otp.model.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -10,10 +11,15 @@ open class Otp {
         internal var merchantKey: String = ""
         internal var gatewayKey: String = ""
         internal var baseUrl: String = ""
+        internal var senderId: String = ""
+        internal var response: Response = Response(false,"","", "","",null)
     }
 
     fun setGateway(gateway: String){
         gatewayKey = gateway
+    }
+    fun setSender(sender: String){
+        senderId = sender
     }
 
     fun generateOtp(target:String, onComplete:(Response)->Unit){
@@ -28,6 +34,7 @@ open class Otp {
                      { result ->
                          response = result
                          response.target = target
+                         Otp.response = response
                          onComplete(response)
                      },
                      { error ->
@@ -43,6 +50,7 @@ open class Otp {
                     { result ->
                         response = result
                         response.target = target
+                        Otp.response = response
                         onComplete(response)
                     },
                     { error ->
@@ -80,6 +88,7 @@ open class Otp {
                     { result ->
                         response = result
                         response.target = target
+                        Otp.response = response
                         onComplete(response)
                     },
                     { error ->
@@ -96,6 +105,7 @@ open class Otp {
                     { result ->
                         response = result
                         response.target = target
+                        Otp.response = response
                         onComplete(response)
                     },
                     { error ->
@@ -118,6 +128,7 @@ open class Otp {
                     { result ->
                         response = result
                         response.target = target
+                        Otp.response = response
                         onComplete(response)
                     },
                     { error ->
@@ -133,6 +144,7 @@ open class Otp {
                     { result ->
                         response = result
                         response.target = target
+                        Otp.response = response
                         onComplete(response)
                     },
                     { error ->
@@ -142,4 +154,5 @@ open class Otp {
                 )
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.fazpass.otp
 
+import android.util.Log
 import com.fazpass.otp.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -30,7 +31,7 @@ internal interface UseCaseOtp {
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(ConsOtp.BASE_URL)
+                .baseUrl(Otp.baseUrl)
                 .client(clientBuilder.build())
                 .build()
 

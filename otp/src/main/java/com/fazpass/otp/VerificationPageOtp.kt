@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +15,14 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
+import com.fazpass.otp.FazpassOtp.Companion.registerDialog
+import com.fazpass.otp.FazpassOtp.Companion.unRegisterDialog
 import com.fazpass.otp.model.Response
 import com.fazpass.otp.HelperOtp.Companion.makeLinks
 import com.google.android.material.button.MaterialButton
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -37,12 +43,9 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
     private lateinit var tvTarget: TextView
     private lateinit var tvDetail: TextView
     private lateinit var tvResend: TextView
-    private lateinit var otp: PinView
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private lateinit var pinView:PinView
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         isCancelable = false
         return inflater.inflate(R.layout.fazpass_verification, container, false)
     }
@@ -53,53 +56,14 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         var otpLength = 0
         try{
             otpLength = response.data?.otp_length.toString().toInt()
         }catch (e:java.lang.Exception){
         }
 
-        digitContainer = view.findViewById(R.id.llValidationOtpDigit)
-        imgLogo = view.findViewById(R.id.imgValidationLogo)
-        tvTitle = view.findViewById(R.id.tvValidationTitle)
-        tvTarget = view.findViewById(R.id.tvValidationMobile)
-        tvDetail = view.findViewById(R.id.tvPleaseInsert)
-        var x = ""
-        for (index in 0 until otpLength) {
-            x+="X"
-        }
-        if(response.data?.channel.toString().uppercase()=="SMS"){
-            imgLogo.setImageResource(R.drawable.sms)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_sms)
-            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }else if (response.data?.channel.toString().uppercase()=="MISSCALL"){
-            imgLogo.setImageResource(R.drawable.call)
-            tvTitle.setText(R.string.we_send_verification_code_as_a_missed_call)
-            tvTarget.text = response.data?.prefix?.plus(x)
-            tvDetail.text = "Please insert $otpLength digit of last number that missed call you"
-        }else if (response.data?.channel.toString().uppercase()=="WHATSAPP"){
-            imgLogo.setImageResource(R.drawable.whatsapp)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
-            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }else if (response.data?.channel.toString().uppercase()=="WA_LONG_NUMBER"){
-            imgLogo.setImageResource(R.drawable.whatsapp)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
-            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }else if (response.data?.channel.toString().uppercase()=="EMAIL"){
-            imgLogo.setImageResource(R.drawable.email)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_email)
-            tvTarget.text = response.target?.replaceRange(3,8,"xxxxx")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }
+        initId(view, otpLength)
 
-        val pinView:PinView = view.findViewById(R.id.otpPin)
-        pinView.itemCount= otpLength
-
-        btnVerify = view.findViewById(R.id.button)
         btnVerify.setOnClickListener {
             val otp = pinView.text.toString()
             if(otp.length==otpLength){
@@ -171,6 +135,49 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
 
     }
 
+    private fun initId(view:View, otpLength: Int){
+
+        digitContainer = view.findViewById(R.id.llValidationOtpDigit)
+        imgLogo = view.findViewById(R.id.imgValidationLogo)
+        tvTitle = view.findViewById(R.id.tvValidationTitle)
+        tvTarget = view.findViewById(R.id.tvValidationMobile)
+        tvDetail = view.findViewById(R.id.tvPleaseInsert)
+        var x = ""
+        for (index in 0 until otpLength) {
+            x+="X"
+        }
+        if(response.data?.channel.toString().uppercase()=="SMS"){
+            imgLogo.setImageResource(R.drawable.sms)
+            tvTitle.setText(R.string.we_send_verification_code_to_your_sms)
+            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
+            tvDetail.setText(R.string.please_insert_your_verification_code)
+        }else if (response.data?.channel.toString().uppercase()=="MISSCALL"){
+            imgLogo.setImageResource(R.drawable.call)
+            tvTitle.setText(R.string.we_send_verification_code_as_a_missed_call)
+            tvTarget.text = response.data?.prefix?.plus(x)
+            tvDetail.text = "Please insert $otpLength digit of last number that missed call you"
+        }else if (response.data?.channel.toString().uppercase()=="WHATSAPP"){
+            imgLogo.setImageResource(R.drawable.whatsapp)
+            tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
+            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
+            tvDetail.setText(R.string.please_insert_your_verification_code)
+        }else if (response.data?.channel.toString().uppercase()=="WA_LONG_NUMBER"){
+            imgLogo.setImageResource(R.drawable.whatsapp)
+            tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
+            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
+            tvDetail.setText(R.string.please_insert_your_verification_code)
+        }else if (response.data?.channel.toString().uppercase()=="EMAIL"){
+            imgLogo.setImageResource(R.drawable.email)
+            tvTitle.setText(R.string.we_send_verification_code_to_your_email)
+            tvTarget.text = response.target?.replaceRange(3,8,"xxxxx")
+            tvDetail.setText(R.string.please_insert_your_verification_code)
+        }
+
+        pinView=  view.findViewById(R.id.otpPin)
+        pinView.itemCount= otpLength
+        btnVerify = view.findViewById(R.id.button)
+    }
+
     private fun removeKeyboard(){
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         var view = requireActivity().currentFocus
@@ -180,7 +187,20 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOtpRead(otp: String){
+        Log.e("READ OTP",otp)
+        pinView.setText(otp)
+    }
 
+    override fun onStart() {
+        super.onStart()
+        registerDialog()
+    }
 
+    override fun onStop() {
+        super.onStop()
+        unRegisterDialog()
+    }
 }
 
