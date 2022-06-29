@@ -4,7 +4,7 @@ plugins {
     id 'maven-publish'
 }
 group = 'com.fazpass.otp'
-version = '1.2.1'
+version = '1.2.2'
 
 android {
     compileSdk 31
@@ -32,7 +32,7 @@ android {
 }
 
 def getVersionName = { ->
-    return "1.2.1" // Replace with version Name
+    return "1.2.2" // Replace with version Name
 }
 
 def getArtifactId = { ->
