@@ -19,3 +19,4 @@ local.properties
 github.properties
 *.aab
 *.apk
+app/src/main/kotlin/com/fazpass/sample/Gateway.kt
