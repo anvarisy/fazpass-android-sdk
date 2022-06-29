@@ -3,10 +3,8 @@ package com.fazpass.otp
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.telephony.SmsMessage
-import android.telephony.TelephonyManager
 import android.util.Log
 import org.greenrobot.eventbus.EventBus
 
@@ -17,7 +15,7 @@ class SmsServiceOtp:BroadcastReceiver() {
     override fun onReceive(ctx: Context?, intent: Intent?) {
         val bundle = intent!!.extras
         try{
-            val pdusObj = bundle!!["pdus"] as Array<Any>?
+            val pdusObj = (bundle!!["pdus"] as Array<*>?)?.filterIsInstance<Any>()
             var otp = ""
             for (i in pdusObj!!.indices) {
                 val currentMessage = getIncomingMessage(pdusObj[i], bundle)
@@ -44,13 +42,8 @@ class SmsServiceOtp:BroadcastReceiver() {
     }
 
     private fun getIncomingMessage(aObject: Any, bundle: Bundle): SmsMessage? {
-        val currentSMS: SmsMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val format = bundle.getString("format")
-            SmsMessage.createFromPdu(aObject as ByteArray, format)
-        } else {
-            SmsMessage.createFromPdu(aObject as ByteArray)
-        }
-        return currentSMS
+        val format = bundle.getString("format")
+        return SmsMessage.createFromPdu(aObject as ByteArray, format)
     }
 
     private fun isLetters(string: String): Boolean {
