@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
 import com.fazpass.otp.FazpassOtp.Companion.registerDialog
@@ -133,6 +131,7 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initId(view:View, otpLength: Int){
 
         digitContainer = view.findViewById(R.id.llValidationOtpDigit)
@@ -153,7 +152,7 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
             imgLogo.setImageResource(R.drawable.call)
             tvTitle.setText(R.string.we_send_verification_code_as_a_missed_call)
             tvTarget.text = response.data?.prefix?.plus(x)
-            tvDetail.text = "Please insert ${otpLength} digit of last number that missed call you"
+            tvDetail.text = "Please insert $otpLength digit of last number that missed call you"
         }else if (response.data?.channel.toString().uppercase()=="WHATSAPP"){
             imgLogo.setImageResource(R.drawable.whatsapp)
             tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
@@ -170,7 +169,6 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
             tvTarget.text = response.target?.replaceRange(3,8,"xxxxx")
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }
-        val density = view.resources.displayMetrics.density
         pinView=  view.findViewById(R.id.otpPin)
         pinView.itemCount= otpLength
         pinView.setHideLineWhenFilled(false)
