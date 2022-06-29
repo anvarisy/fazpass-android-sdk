@@ -1,6 +1,5 @@
 package com.fazpass.otp
 
-import android.util.Log
 import com.fazpass.otp.model.*
 import io.reactivex.Completable
 import io.reactivex.Observable

@@ -17,10 +17,9 @@ import androidx.fragment.app.DialogFragment
 import com.chaos.view.PinView
 import com.fazpass.otp.FazpassOtp.Companion.registerDialog
 import com.fazpass.otp.FazpassOtp.Companion.unRegisterDialog
-import com.fazpass.otp.model.Response
 import com.fazpass.otp.HelperOtp.Companion.makeLinks
+import com.fazpass.otp.model.Response
 import com.google.android.material.button.MaterialButton
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -36,7 +35,6 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
     val complete = onComplete
     private var response = otpResponse
     private lateinit var digitContainer: LinearLayout
-    private lateinit var digit: EditText
     private lateinit var btnVerify: MaterialButton
     private lateinit var imgLogo: ImageView
     private lateinit var tvTitle: TextView
@@ -52,7 +50,7 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
     override fun getTheme(): Int {
         return R.style.DialogTheme
     }
-    @RequiresApi(Build.VERSION_CODES.M)
+
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,7 +111,7 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun verify(otp: String, context: Context){
         removeKeyboard()
         if(FazpassOtp.isOnline(context)){
@@ -155,7 +153,7 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
             imgLogo.setImageResource(R.drawable.call)
             tvTitle.setText(R.string.we_send_verification_code_as_a_missed_call)
             tvTarget.text = response.data?.prefix?.plus(x)
-            tvDetail.text = "Please insert $otpLength digit of last number that missed call you"
+            tvDetail.text = "Please insert ${otpLength} digit of last number that missed call you"
         }else if (response.data?.channel.toString().uppercase()=="WHATSAPP"){
             imgLogo.setImageResource(R.drawable.whatsapp)
             tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
@@ -172,9 +170,16 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
             tvTarget.text = response.target?.replaceRange(3,8,"xxxxx")
             tvDetail.setText(R.string.please_insert_your_verification_code)
         }
-
+        val density = view.resources.displayMetrics.density
         pinView=  view.findViewById(R.id.otpPin)
         pinView.itemCount= otpLength
+        pinView.setHideLineWhenFilled(false)
+        pinView.itemHeight= 42 *3
+        pinView.itemRadius= 4 * 3
+        pinView.itemSpacing= 4 * 3
+        pinView.lineWidth= 3
+        pinView.itemWidth= 35 * 3
+        pinView.setLineColor(view.context.getColor(R.color.grey))
         btnVerify = view.findViewById(R.id.button)
     }
 

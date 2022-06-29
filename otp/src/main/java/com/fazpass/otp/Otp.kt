@@ -1,6 +1,5 @@
 package com.fazpass.otp
 
-import androidx.appcompat.app.AppCompatActivity
 import com.fazpass.otp.model.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,9 +17,7 @@ open class Otp {
     fun setGateway(gateway: String){
         gatewayKey = gateway
     }
-    fun setSender(sender: String){
-        senderId = sender
-    }
+
 
     fun generateOtp(target:String, onComplete:(Response)->Unit){
         val fazpass by lazy { UseCaseOtp.start() }

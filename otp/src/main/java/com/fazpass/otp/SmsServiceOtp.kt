@@ -6,16 +6,13 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.telephony.SmsMessage
+import android.telephony.TelephonyManager
 import android.util.Log
 import org.greenrobot.eventbus.EventBus
 
 
 class SmsServiceOtp:BroadcastReceiver() {
-    private var callback: ServiceListenerOtp? = null
 
-    fun setOnOtpReceived(callback: ServiceListenerOtp?) {
-        this.callback = callback
-    }
 
     override fun onReceive(ctx: Context?, intent: Intent?) {
         val bundle = intent!!.extras
@@ -39,7 +36,6 @@ class SmsServiceOtp:BroadcastReceiver() {
                    }
                 }
                 Log.d("INCOMING OTP", otp)
-                callback?.onSmsReceived(otp)
                 EventBus.getDefault().post(otp)
             }
         }catch (e: Exception){
