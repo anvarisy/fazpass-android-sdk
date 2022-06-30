@@ -42,28 +42,17 @@
                 android:showDividers="middle"
                 android:divider="@drawable/horizontal_margin"
                 android:layout_marginBottom="16dp" android:id="@+id/llValidationOtpDigit">
+
             <com.chaos.view.PinView
-                    android:id="@+id/otpPin"
-                    style="@style/PinWidget.PinView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:cursorVisible="true"
-                    android:inputType="number"
-                    android:padding="1dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:cursorColor="@color/grey"
-                    app:cursorWidth="2dp"
-                    app:hideLineWhenFilled="false"
-                    app:itemCount="4"
-                    app:itemHeight="40dp"
-                    app:itemRadius="4dp"
-                    app:itemSpacing="4dp"
-                    app:itemWidth="30dp"
-                    app:lineColor="@color/grey"
-                    app:lineWidth="1dp"
-                    app:viewType="rectangle" />
+                android:id="@+id/otpPin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:cursorVisible="true"
+                android:inputType="number"
+                android:padding="1dp"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
         <com.google.android.material.button.MaterialButton
                 app:cornerRadius="5dp"

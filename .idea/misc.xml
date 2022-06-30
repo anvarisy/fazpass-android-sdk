@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Fazpass/fazpass-android-sdk/otp/src/main/res/layout/fazpass_verification.xml" value="0.11302083333333333" />
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/app/src/main/res/drawable/backgroud_splash.xml" value="0.2265" />
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/app/src/main/res/drawable/background_splash.xml" value="0.124" />
         <entry key="..\:/Projects/Kotlin/fazpass-android-sdk/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />

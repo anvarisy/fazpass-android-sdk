@@ -17,3 +17,6 @@ local.properties
 .idea/gradle.xml
 .idea/misc.xml
 github.properties
+*.aab
+*.apk
+app/src/main/kotlin/com/fazpass/sample/Gateway.kt
