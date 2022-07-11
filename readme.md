@@ -27,6 +27,13 @@ Gradle
 
 
 ## Usage
+### Manifest
+As default this SDK used these permissions
+```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+```
+### Activity / Fragment
 ```kotlin
 import com.fazpass.otp.FazpassOtp
 
@@ -103,6 +110,14 @@ It is some sample of our template
 
 ## LISTEN INCOMING OTP
 For you that need to auto read message and incoming call, we already create the function to handle that.
+### Manifest
+```xml
+<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+<uses-permission android:name="android.permission.READ_CALL_LOG"/>
+<uses-permission android:name="android.permission.RECEIVE_SMS" />
+<uses-permission android:name="android.permission.READ_SMS" />
+```
+
 ### Activity
 You need to register your fragment or dialog that will receive the OTP
 ```kotlin
@@ -128,4 +143,4 @@ We will try to always make it simple and secure
 <img src="https://github.githubassets.com/images/icons/emoji/unicode/2665.png?v8" width="20" height="20"/>
 
 ## License
-[MIT](https://github.com/fazpass/fazpass-android-sdk/blob/main/LICENSE)
+[MIT](https://github.com/fazpass/fazpass-android-sdk/
