@@ -16,12 +16,13 @@ import com.chaos.view.PinView
 import com.fazpass.otp.FazpassOtp.Companion.registerDialog
 import com.fazpass.otp.FazpassOtp.Companion.unRegisterDialog
 import com.fazpass.otp.HelperOtp.Companion.makeLinks
+import com.fazpass.otp.model.Data
 import com.fazpass.otp.model.Response
 import com.google.android.material.button.MaterialButton
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Response) : DialogFragment() {
+internal class VerificationPageOtp(otpResponse: Response, onComplete: OnCompleteOtp<Unit>) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return object : Dialog(requireActivity(), theme) {
             override fun onBackPressed() {
@@ -80,26 +81,63 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
                 val m = Otp()
                 when (response.target) {
                     "generate" -> {
-                        response.target?.let { target -> m.generateOtp(target) { it->
-                            response = it
-                            LoadingDialogOtp.hideLoading()
-                        } }
+                        response.target?.let { target -> m.generateOtp(target, object: OnCompleteOtp<Response> {
+
+                            override fun onSuccess(result: Response) {
+                                response = result
+                                response.target = target
+                                Otp.response = response
+                                LoadingDialogOtp.hideLoading()
+                            }
+
+                            override fun onFailure(err: Throwable) {
+                                response = Response(false, "", "generate", "", target, null)
+                                response.error = err.message
+                                LoadingDialogOtp.hideLoading()
+                            }
+
+                        })
+                        }
                     }
                     "send" -> {
                         response.target?.let { target ->
                             response.data?.otp?.let { otp ->
-                                m.sendOtp(target, otp) { it->
-                                    response = it
-                                    LoadingDialogOtp.hideLoading()
-                                }
+                                m.sendOtp(target, otp, object: OnCompleteOtp<Response> {
+
+                                    override fun onSuccess(result: Response) {
+                                        response = result
+                                        response.target = target
+                                        Otp.response = response
+                                        LoadingDialogOtp.hideLoading()
+                                    }
+
+                                    override fun onFailure(err: Throwable) {
+                                        response = Response(false, "", "send", "", target, Data("", otp, "", "", "", "", ""))
+                                        response.error = err.message
+                                        LoadingDialogOtp.hideLoading()
+                                    }
+                                })
                             }
                         }
                     }
                     "request" -> {
-                        response.target?.let { target -> m.requestOtp(target) { it->
-                            response = it
-                            LoadingDialogOtp.hideLoading()
-                        } }
+                        response.target?.let { target ->
+                            m.requestOtp(target, object : OnCompleteOtp<Response> {
+
+                                override fun onSuccess(result: Response) {
+                                    response = result
+                                    response.target = target
+                                    Otp.response = response
+                                    LoadingDialogOtp.hideLoading()
+                                }
+
+                                override fun onFailure(err: Throwable) {
+                                    response = Response(false, "", "request", "", target, null)
+                                    response.error = err.message
+                                    LoadingDialogOtp.hideLoading()
+                                }
+                            })
+                        }
                     }
                 }
 
@@ -117,18 +155,25 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
             val m = Otp()
             val otpId = response.data?.id
             if (otpId != null) {
-                m.verifyOtp(otpId, otp){
-                    LoadingDialogOtp.hideLoading()
-                    complete(it)
-                }
+                m.verifyOtp(otpId, otp, object: OnCompleteOtp<Boolean> {
+
+                    override fun onSuccess(result: Boolean) {
+                        LoadingDialogOtp.hideLoading()
+                        complete.onSuccess(Unit)
+                    }
+
+                    override fun onFailure(err: Throwable) {
+                        LoadingDialogOtp.hideLoading()
+                        complete.onFailure(err)
+                    }
+                })
             }else{
                 LoadingDialogOtp.hideLoading()
-                complete(false)
+                complete.onFailure(Throwable("Otp Id is null"))
             }
         }else{
             Toast.makeText(context,"Verification failed cause you are in offline mode", Toast.LENGTH_LONG).show()
         }
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -143,33 +188,43 @@ internal class VerificationPageOtp(onComplete:(Boolean)->Unit, otpResponse: Resp
         for (index in 0 until otpLength) {
             x+="X"
         }
-        if(response.data?.channel.toString().uppercase()=="SMS"){
-            imgLogo.setImageResource(R.drawable.sms)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_sms)
-            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }else if (response.data?.channel.toString().uppercase()=="MISSCALL"){
-            imgLogo.setImageResource(R.drawable.call)
-            tvTitle.setText(R.string.we_send_verification_code_as_a_missed_call)
-            tvTarget.text = response.data?.prefix?.plus(x)
-            tvDetail.text = "Please insert $otpLength digit of last number that missed call you"
-        }else if (response.data?.channel.toString().uppercase()=="WHATSAPP"){
-            imgLogo.setImageResource(R.drawable.whatsapp)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
-            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }else if (response.data?.channel.toString().uppercase()=="WA_LONG_NUMBER"){
-            imgLogo.setImageResource(R.drawable.whatsapp)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_whatsapp)
-            tvTarget.text = response.target?.dropLast(4).plus("XXXX")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
-        }else if (response.data?.channel.toString().uppercase()=="EMAIL"){
-            imgLogo.setImageResource(R.drawable.email)
-            tvTitle.setText(R.string.we_send_verification_code_to_your_email)
-            tvTarget.text = response.target?.replaceRange(3,8,"xxxxx")
-            tvDetail.setText(R.string.please_insert_your_verification_code)
+
+        val drawableId : Int
+        val titleId : Int
+        val targetString : String
+        val detailString : String
+        when (response.data?.channel.toString().uppercase()) {
+            "SMS" -> {
+                drawableId = R.drawable.sms
+                titleId = R.string.we_send_verification_code_to_your_sms
+                targetString = response.target?.dropLast(4).plus("XXXX")
+                detailString = getString(R.string.please_insert_your_verification_code)
+            }
+            "MISSCALL" -> {
+                drawableId = R.drawable.call
+                titleId = R.string.we_send_verification_code_as_a_missed_call
+                targetString = response.data?.prefix?.plus(x) ?: ""
+                detailString = getString(R.string.please_insert_your_miscall_last_number, otpLength)
+            }
+            "EMAIL" -> {
+                drawableId = R.drawable.email
+                titleId = R.string.we_send_verification_code_to_your_email
+                targetString = response.target?.replaceRange(3,8,"xxxxx") ?: ""
+                detailString = getString(R.string.please_insert_your_verification_code)
+            }
+            else -> {
+                drawableId = R.drawable.whatsapp
+                titleId = R.string.we_send_verification_code_to_your_whatsapp
+                targetString = response.target?.dropLast(4).plus("XXXX")
+                detailString = getString(R.string.please_insert_your_verification_code)
+            }
         }
-        pinView=  view.findViewById(R.id.otpPin)
+        imgLogo.setImageResource(drawableId)
+        tvTitle.setText(titleId)
+        tvTarget.text = targetString
+        tvDetail.text = detailString
+
+        pinView = view.findViewById(R.id.otpPin)
         pinView.itemCount= otpLength
         pinView.setHideLineWhenFilled(false)
         pinView.itemHeight= 42 *3
