@@ -1,7 +1,6 @@
 package com.fazpass.otp
 
 import com.fazpass.otp.model.*
-import io.reactivex.Completable
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +14,7 @@ import retrofit2.http.POST
 internal interface UseCaseOtp {
     @POST("generate") fun generateOtpByPhone(@Header("Authorization") token:String, @Body requestBody: RequestOtpByPhone): Observable<Response>
     @POST("generate") fun generateOtpByEmail(@Header("Authorization") token:String, @Body requestBody: RequestOtpByEmail): Observable<Response>
-    @POST("verify") fun verifyOtp(@Header("Authorization") token:String, @Body requestBody: VerifyOtpRequest): Completable
+    @POST("verify") fun verifyOtp(@Header("Authorization") token:String, @Body requestBody: VerifyOtpRequest): Observable<Boolean>
     @POST("request") fun requestOtpByPhone(@Header("Authorization") token:String, @Body requestBody: RequestOtpByPhone): Observable<Response>
     @POST("request") fun requestOtpByEmail(@Header("Authorization") token:String, @Body requestBody: RequestOtpByEmail):Observable<Response>
     @POST("send") fun sendOtpByPhone(@Header("Authorization") token:String, @Body requestBody: SendOtpRequestByPhone): Observable<Response>

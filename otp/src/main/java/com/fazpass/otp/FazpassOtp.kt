@@ -26,14 +26,14 @@ class FazpassOtp {
             return Otp()
         }
 
-        fun verificationPage(activity: AppCompatActivity, it:Response, onComplete:(Boolean)->Unit){
+        fun verificationPage(activity: AppCompatActivity, it:Response, onComplete: OnCompleteOtp<Unit>){
             val imm = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             var view = activity.currentFocus
             if (view == null) {
                 view = View(activity)
             }
             imm.hideSoftInputFromWindow(view.windowToken, 0)
-            val dialogFragment = VerificationPageOtp(onComplete, it)
+            val dialogFragment = VerificationPageOtp(it, onComplete)
             dialogFragment.show(activity.supportFragmentManager, "fazpass_verification")
         }
 
